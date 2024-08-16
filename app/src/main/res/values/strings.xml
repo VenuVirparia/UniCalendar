@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">UniCalendar</string>
+    <string name="re_enter_password">Re-enter Password</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="create_new_account">Create New Account</string>
+    <string-array name="roles_array">
+        <item>Student</item>
+        <item>Club Authority</item>
+    </string-array>
 </resources>
