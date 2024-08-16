@@ -17,7 +17,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // Create users table
         String createUserTable = "CREATE TABLE users (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "username TEXT NOT NULL, " +
+                "username TEXT UNIQUE NOT NULL, " +
                 "email TEXT UNIQUE NOT NULL, " +
                 "password TEXT NOT NULL, " +
                 "role TEXT NOT NULL, " +  // student, admin, club_authority
@@ -27,7 +27,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // Create requests table for club authority requests
         String createRequestsTable = "CREATE TABLE requests (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "username TEXT NOT NULL, " +
+                "username TEXT UNIQUE NOT NULL, " +
                 "email TEXT UNIQUE NOT NULL, " +
                 "password TEXT NOT NULL, " +
                 "role TEXT NOT NULL)";  // Always 'Club Authority'
