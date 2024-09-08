@@ -31,7 +31,7 @@ public class login extends AppCompatActivity {
         dbHelper = new DBHelper(this);
 
         SharedPreferences sharedPreferences = getSharedPreferences("UniCalPrefs", MODE_PRIVATE);
-        if (sharedPreferences.contains("email")) {
+        if (sharedPreferences.contains(emailInput.getText().toString())) {
             // Directly go to MainActivity if user is already logged in
             Intent intent = new Intent(login.this, MainActivity.class);
             startActivity(intent);

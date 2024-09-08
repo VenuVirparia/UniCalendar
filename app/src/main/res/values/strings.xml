@@ -4,6 +4,8 @@
     <string name="enter_password">Enter Password</string>
     <string name="enter_email">Enter Email</string>
     <string name="create_new_account">Create New Account</string>
+    <string name="login">Login</string>
+    <string name="loginBtn">Login</string>
     <string-array name="roles_array">
         <item>Student</item>
         <item>Club Authority</item>

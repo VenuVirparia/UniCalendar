@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#9BB7B8"
-    tools:context=".LoginActivity">
+    tools:context=".login">
 
     <TextView
         android:id="@+id/loginTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/alice"
-        android:text="Login"
+        android:text="@string/login"
         android:textColorLink="#49454F"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:fontFamily="@font/alice"
-        android:text="Login"
+        android:text="@string/loginBtn"
         android:textColorLink="#49454F"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
