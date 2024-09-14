@@ -1,11 +1,8 @@
 package com.example.unicalendar;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -42,8 +39,19 @@ public class login extends AppCompatActivity {
 
 
         loginButton.setOnClickListener(v -> {
-            String email = emailInput.getText().toString();
-            String password = passwordInput.getText().toString();
+            String email = emailInput.getText().toString().trim();
+            String password = passwordInput.getText().toString().trim();
+
+            if (!isValidEmail(email)) {
+                Toast.makeText(login.this, "Invalid email format.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (password.isEmpty()) {
+                Toast.makeText(login.this, "Password cannot be empty.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
@@ -59,6 +67,9 @@ public class login extends AppCompatActivity {
         newUserLink.setOnClickListener(v ->
                 startActivity(new Intent(login.this,
                         signup.class)));
+    }
+    private boolean isValidEmail(String email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 }
 
