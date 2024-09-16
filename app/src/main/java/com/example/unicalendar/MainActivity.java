@@ -30,7 +30,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Set up the toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);  // Set the toolbar as action bar
+        setSupportActionBar(toolbar);// Set the toolbar as action bar
+//        toolbar.setLogo(R.drawable.logo);
+//        toolbar.setContentInsetStartWithNavigation(0);
+//        toolbar.setContentInsetsAbsolute(0, 0);
     }
 
     // Inflate the menu with the profile icon
