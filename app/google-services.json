@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "397037466259",
+    "project_id": "unicalendar-a154c",
+    "storage_bucket": "unicalendar-a154c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397037466259:android:9e9e31a4631d774d30d366",
+        "android_client_info": {
+          "package_name": "com.example.unicalendar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdDmwRfKSC1XOLfJ4hcyFsP60CuIo7kPc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
