@@ -1,17 +1,29 @@
 package com.example.unicalendar;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
         // Set up the toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Initialize Firebase Database reference
+        databaseReference = FirebaseDatabase.getInstance().getReference("events");
 
         // Set up fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -49,21 +64,67 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // Method to update the event list in EventListFragment
     public void updateEventList(String selectedDate) {
-        // Simulate fetching events from the database for the selected date
-        ArrayList<String> events = fetchEventsForDate(selectedDate);
+        // Fetch events for the selected date from Firebase
+        databaseReference.child(selectedDate).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<Event> events = new ArrayList<>();
+                for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+                    String eventName = eventSnapshot.child("name").getValue(String.class);
+                    String eventTime = eventSnapshot.child("time").getValue(String.class);
+                    String eventVenue = eventSnapshot.child("venue").getValue(String.class);
+                    String eventDetails = eventSnapshot.child("details").getValue(String.class);
+                    events.add(new Event(eventName, eventTime, eventVenue, eventDetails));
+                }
 
-        // Find the EventListFragment
-        EventListFragment eventListFragment = (EventListFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_container_lower);
+                EventListFragment eventListFragment = (EventListFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.fragment_container_lower);
 
-        if (eventListFragment != null) {
-            // Pass the events to the fragment to update the list
-            eventListFragment.updateEventList(events);
-        }
+                if (eventListFragment != null) {
+                    eventListFragment.updateEventList(events);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle database error
+            }
+        });
     }
 
-    // Simulated method to fetch events for a specific date (replace with actual database logic)
-   //Add firebase logic
+    // Admin dialog for adding events
+    public void showAddEventDialog(String selectedDate) {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_add_event);
+
+        EditText eventNameEditText = dialog.findViewById(R.id.event_name);
+        EditText eventTimeEditText = dialog.findViewById(R.id.event_time);
+        EditText eventVenueEditText = dialog.findViewById(R.id.event_venue);
+        EditText eventDetailsEditText = dialog.findViewById(R.id.event_details);
+        Button saveButton = dialog.findViewById(R.id.save_button);
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String eventName = eventNameEditText.getText().toString();
+                String eventTime = eventTimeEditText.getText().toString();
+                String eventVenue = eventVenueEditText.getText().toString();
+                String eventDetails = eventDetailsEditText.getText().toString();
+
+                saveEventToDatabase(selectedDate, eventName, eventTime, eventVenue, eventDetails);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void saveEventToDatabase(String selectedDate, String name, String time, String venue, String details) {
+        DatabaseReference eventRef = databaseReference.child(selectedDate).push();
+        eventRef.child("name").setValue(name);
+        eventRef.child("time").setValue(time);
+        eventRef.child("venue").setValue(venue);
+        eventRef.child("details").setValue(details);
+    }
 }
