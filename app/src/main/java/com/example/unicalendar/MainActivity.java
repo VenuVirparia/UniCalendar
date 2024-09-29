@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
     // Admin dialog for adding events
     public void showAddEventDialog(String selectedDate) {
         Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_add_event);
 
         EditText eventNameEditText = dialog.findViewById(R.id.event_name);
