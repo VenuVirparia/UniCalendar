@@ -65,11 +65,5 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Simulated method to fetch events for a specific date (replace with actual database logic)
-    private ArrayList<String> fetchEventsForDate(String date) {
-        ArrayList<String> events = new ArrayList<>();
-        events.add("Event 1 - Venue A - 10:00 AM");
-        events.add("Event 2 - Venue B - 12:00 PM");
-        events.add("Event 3 - Venue C - 2:00 PM");
-        return events;
-    }
+   //Add firebase logic
 }
