@@ -7,11 +7,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.core.view.GravityCompat;
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +31,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private DatabaseReference databaseReference;
+    DrawerLayout drawerLayout;
+    ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +42,17 @@ public class MainActivity extends AppCompatActivity {
         // Set up the toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("UniCalendar");
+        getSupportActionBar().setLogo(R.drawable.logo); // Replace with your app icon resource
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+
+        // Enable the drawer toggle on the action bar
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
 
         // Initialize Firebase Database reference
         databaseReference = FirebaseDatabase.getInstance().getReference("events");
@@ -54,12 +73,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Handle menu item clicks
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (item.getItemId() == R.id.action_profile) {
+//            // Open profile activity
+//            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+//            startActivity(intent);
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_profile) {
-            // Open profile activity
-            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-            startActivity(intent);
+            drawerLayout.openDrawer(GravityCompat.END); // Open the drawer from the right
             return true;
         }
         return super.onOptionsItemSelected(item);
