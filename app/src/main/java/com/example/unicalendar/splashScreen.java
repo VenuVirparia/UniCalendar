@@ -6,6 +6,10 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +25,18 @@ public class splashScreen extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash_screen);
+        Animation fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+
+        ImageView imageView = findViewById(R.id.imageView);
+        TextView uniCalendarText = findViewById(R.id.UniCalendar);
+        TextView tagLineText = findViewById(R.id.tagLine);
+        TextView developerNameText = findViewById(R.id.developerName);
+
+        // Apply the animation to the views
+        imageView.startAnimation(fadeInAnimation);
+        uniCalendarText.startAnimation(fadeInAnimation);
+        tagLineText.startAnimation(fadeInAnimation);
+        developerNameText.startAnimation(fadeInAnimation);
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -38,6 +54,6 @@ public class splashScreen extends AppCompatActivity {
 
                 finish(); // Close the splash screen activity after redirecting
             }
-        }, 3000);
+        }, 4000);
     }
 }
