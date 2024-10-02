@@ -15,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -34,8 +36,10 @@ public class CalendarFragment extends Fragment {
         // Initialize Firebase database reference
         databaseReference = FirebaseDatabase.getInstance().getReference("events");
 
-        if (getActivity() != null) {
-            String userEmail = getActivity().getIntent().getStringExtra("email");
+        // Get current logged-in user
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String userEmail = currentUser.getEmail();
             Log.d("CalendarFragment", "User Email: " + userEmail);
 
             // Check if the user is an admin
@@ -44,6 +48,9 @@ public class CalendarFragment extends Fragment {
             } else {
                 fab.setVisibility(View.GONE);
             }
+        } else {
+            Log.d("CalendarFragment", "No user is logged in.");
+            fab.setVisibility(View.GONE);
         }
 
         calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {

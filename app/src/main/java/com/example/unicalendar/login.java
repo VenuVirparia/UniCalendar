@@ -29,6 +29,16 @@ public class login extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
+        // Check if user is already logged in
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            // User is logged in, redirect to MainActivity
+            Intent intent = new Intent(login.this, MainActivity.class);
+            startActivity(intent);
+            finish(); // Close the login activity
+            return; // Exit onCreate
+        }
+
         // Bind views
         emailInput = findViewById(R.id.email);
         passwordInput = findViewById(R.id.password);
@@ -77,8 +87,7 @@ public class login extends AppCompatActivity {
         });
 
         // Redirect to signup activity when the user clicks on "New User? Sign up"
-        newUserLink.setOnClickListener(v ->
-                startActivity(new Intent(login.this, signup.class)));
+        newUserLink.setOnClickListener(v -> startActivity(new Intent(login.this, signup.class)));
     }
 
     // Method to validate the email format
