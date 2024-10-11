@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -33,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle toggle;
+    // Set the same size for ic_profile as the logo
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,16 +46,16 @@ public class MainActivity extends AppCompatActivity {
         // Set up the toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("UniCalendar");
-        getSupportActionBar().setLogo(R.drawable.logo); // Replace with your app icon resource
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        // getSupportActionBar().setTitle("UniCalendar");
+        //getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);  // Disable the home button (hamburger menu)
+        //getSupportActionBar().setLogo(R.drawable.logo);  // Set your logo here
+
 
         drawerLayout = findViewById(R.id.drawer_layout);
 
-        // Enable the drawer toggle on the action bar
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+
         Button logout_button = findViewById(R.id.logout_button);
         if (logout_button != null) {
             logout_button.setOnClickListener(new View.OnClickListener() {
@@ -87,20 +91,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem profileMenuItem = menu.findItem(R.id.action_profile);
+        if (profileMenuItem != null) {
+            ImageView profileIcon = (ImageView) profileMenuItem.getActionView();
+            if (profileIcon != null) {
+                profileIcon.getLayoutParams().width = 50;  // Set width
+                profileIcon.getLayoutParams().height = 50; // Set height
+                profileIcon.requestLayout(); // Request layout update
+            }
+        }
         return true;
     }
 
-    // Handle menu item clicks
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == R.id.action_profile) {
-//            // Open profile activity
-//            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-//            startActivity(intent);
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
 
 
 

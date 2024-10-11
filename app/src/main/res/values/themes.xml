@@ -10,6 +10,9 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item> <!-- Optional if you want fullscreen -->
     </style>
-
+    <style name="roundFab">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
     <style name="Theme.UniCalendar" parent="Base.Theme.UniCalendar" />
 </resources>

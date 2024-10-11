@@ -25,12 +25,39 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:background="#9BB7B8"
             android:elevation="8dp"
-            android:title="UniCal Events"
-            android:titleTextColor="@android:color/white"
-            android:subtitle="Your University Calendar"
-            android:subtitleTextColor="@android:color/white"
             android:paddingStart="16dp"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:orientation="horizontal"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="7dp">
+
+                <!-- Logo on the left -->
+
+                <!-- Title next to the logo -->
+                <ImageView
+                    android:id="@+id/toolbar_logo"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="App Logo"
+                    android:src="@drawable/logo" />
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="31dp"
+                    android:layout_gravity="bottom"
+                    android:fontFamily="@font/aclonica"
+                    android:paddingStart="8dp"
+                    android:text="UniCalendar"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
 
         <!-- Fragment Container (Upper Half for Calendar Fragment) -->
         <FrameLayout
@@ -66,8 +93,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:orientation="vertical"
-        android:background="@color/white"
-        android:padding="16dp">
+        android:background="@drawable/rounded_background"
+    android:padding="16dp">
 
         <!-- Profile Menu Content -->
         <TextView
