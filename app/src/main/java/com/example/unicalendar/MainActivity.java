@@ -7,23 +7,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -52,18 +52,36 @@ public class MainActivity extends AppCompatActivity {
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+        Button logout_button = findViewById(R.id.logout_button);
+        if (logout_button != null) {
+            logout_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FirebaseAuth.getInstance().signOut();  // Add sign-out logic
+                    startActivity(new Intent(MainActivity.this, login.class));
+                    finish(); // Optional: to close MainActivity
+                }
+            });
+        }
+
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            TextView userEmailTextView = findViewById(R.id.user_email);  // Add this line
+            if (currentUser != null) {
+                String userEmail = currentUser.getEmail();
+                userEmailTextView.setText(userEmail);  // Display user's email
+            }
+            // Initialize Firebase Database reference
+            databaseReference = FirebaseDatabase.getInstance().getReference("events");
+
+            // Set up fragments
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container_upper, new CalendarFragment())
+                    .replace(R.id.fragment_container_lower, new EventListFragment())
+                    .commit();
 
 
-        // Initialize Firebase Database reference
-        databaseReference = FirebaseDatabase.getInstance().getReference("events");
-
-        // Set up fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_upper, new CalendarFragment())
-                .replace(R.id.fragment_container_lower, new EventListFragment())
-                .commit();
-    }
+        }
 
     // Inflate the menu with the profile icon
     @Override
@@ -83,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //        return super.onOptionsItemSelected(item);
 //    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
