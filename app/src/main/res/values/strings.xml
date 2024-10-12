@@ -7,4 +7,24 @@
     <string name="login">login\n</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string-array name="clubs_array">
+        <item>University</item>
+        <item>Sports Club</item>
+        <item>Samvaad</item>
+        <item>IETE</item>
+        <item>GDSC</item>
+        <item>CSI</item>
+        <item>Shutterbugs</item>
+        <item>Readers Community</item>
+        <item>Decibel</item>
+    </string-array>
+
+    <string-array name="venue_array">
+        <item>MMH</item>
+        <item>Seminar Hall</item>
+        <item>Medical Sports Ground</item>
+        <item>Open Canteen</item>
+        <item>Center Foyer</item>
+        <item>ClassRoom</item>
+    </string-array>
 </resources>
