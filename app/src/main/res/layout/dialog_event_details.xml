@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- dialog_event_details -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,24 +10,41 @@
         android:id="@+id/event_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Event Name"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp" />
 
+    <TextView
+        android:id="@+id/event_club"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginBottom="4dp" />
     <TextView
         android:id="@+id/event_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Event Time" />
+        android:textSize="16sp"
+        android:layout_marginBottom="4dp" />
 
     <TextView
         android:id="@+id/event_venue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Event Venue" />
+        android:textSize="16sp"
+        android:layout_marginBottom="4dp" />
+
+    <TextView
+        android:id="@+id/event_classroom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginBottom="4dp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/event_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Event Details" />
+        android:textSize="14sp" />
 </LinearLayout>

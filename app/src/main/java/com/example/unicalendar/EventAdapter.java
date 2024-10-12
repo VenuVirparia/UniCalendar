@@ -20,17 +20,21 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         this.listener = listener;
     }
 
+
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event, parent, false);
         return new EventViewHolder(view);
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = eventList.get(position);
-        holder.bind(event, listener);
+        if (event != null) {
+            holder.bind(event, listener);
+        }
     }
 
     @Override
@@ -43,15 +47,18 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     static class EventViewHolder extends RecyclerView.ViewHolder {
-        TextView eventTextView;
+        TextView eventNameTextView;
+        TextView eventClubTextView;
 
         EventViewHolder(@NonNull View itemView) {
             super(itemView);
-            eventTextView = itemView.findViewById(android.R.id.text1);
+            eventNameTextView = itemView.findViewById(R.id.event_name);
+            eventClubTextView = itemView.findViewById(R.id.event_club);
         }
 
         void bind(Event event, OnEventClickListener listener) {
-            eventTextView.setText(event.getName() + " - " + event.getVenue() + " - " + event.getTime());
+            eventNameTextView.setText(event.getName());
+            eventClubTextView.setText(event.getClub());
             itemView.setOnClickListener(v -> listener.onEventClick(event));
         }
     }

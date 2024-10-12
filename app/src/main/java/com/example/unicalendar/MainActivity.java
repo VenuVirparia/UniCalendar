@@ -3,6 +3,7 @@ package com.example.unicalendar;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -18,7 +20,7 @@ import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
-
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,7 +29,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ValueEventListener;
 
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,21 +44,30 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FirebaseApp.initializeApp(this);
 
         // Set up the toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        // getSupportActionBar().setTitle("UniCalendar");
-        //getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);  // Disable the home button (hamburger menu)
-        //getSupportActionBar().setLogo(R.drawable.logo);  // Set your logo here
 
 
+//        Button testButton = findViewById(R.id.test_firebase_button);
+//
+//        testButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Pass MainActivity.this instead of "this"
+//                firebaseDatabaseTester tester = new firebaseDatabaseTester(MainActivity.this);
+//                tester.testDatabaseWrite(); // Optional: to close MainActivity
+//            }
+//        });
         drawerLayout = findViewById(R.id.drawer_layout);
 
 
@@ -84,7 +99,9 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.fragment_container_lower, new EventListFragment())
                     .commit();
 
-
+        // Set default date to today in "dd-MM-yyyy" format
+        String today = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+        updateEventList(today);
         }
 
     // Inflate the menu with the profile icon
@@ -116,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateEventList(String selectedDate) {
-        // Fetch events for the selected date from Firebase
         databaseReference.child(selectedDate).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -126,57 +142,28 @@ public class MainActivity extends AppCompatActivity {
                     String eventTime = eventSnapshot.child("time").getValue(String.class);
                     String eventVenue = eventSnapshot.child("venue").getValue(String.class);
                     String eventDetails = eventSnapshot.child("details").getValue(String.class);
-                    events.add(new Event(eventName, eventTime, eventVenue, eventDetails));
+                    String eventClub = eventSnapshot.child("club").getValue(String.class);
+                    String classroomNumber = eventSnapshot.child("classroomNumber").getValue(String.class);
+
+                    if (eventName != null) {
+                        Event event = new Event(eventName, eventTime, eventVenue, eventDetails, eventClub, classroomNumber);
+                        events.add(event);
+                    }
                 }
 
                 EventListFragment eventListFragment = (EventListFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.fragment_container_lower);
 
                 if (eventListFragment != null) {
-                    eventListFragment.updateEventList(events);
+                    eventListFragment.updateEventList(events, selectedDate);
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Handle database error
+                Log.e("FirebaseError", "Database error: " + databaseError.getMessage());
+                Toast.makeText(MainActivity.this, "Failed to load events. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    // Admin dialog for adding events
-    public void showAddEventDialog(String selectedDate) {
-        Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_add_event);
-
-        EditText eventNameEditText = dialog.findViewById(R.id.event_name);
-        EditText eventTimeEditText = dialog.findViewById(R.id.event_time);
-        EditText eventVenueEditText = dialog.findViewById(R.id.event_venue);
-        EditText eventDetailsEditText = dialog.findViewById(R.id.event_details);
-        Button saveButton = dialog.findViewById(R.id.save_button);
-
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String eventName = eventNameEditText.getText().toString();
-                String eventTime = eventTimeEditText.getText().toString();
-                String eventVenue = eventVenueEditText.getText().toString();
-                String eventDetails = eventDetailsEditText.getText().toString();
-
-                saveEventToDatabase(selectedDate, eventName, eventTime, eventVenue, eventDetails);
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-    }
-
-    private void saveEventToDatabase(String selectedDate, String name, String time, String venue, String details) {
-        DatabaseReference eventRef = databaseReference.child(selectedDate).push();
-        eventRef.child("name").setValue(name);
-        eventRef.child("time").setValue(time);
-        eventRef.child("venue").setValue(venue);
-        eventRef.child("details").setValue(details);
     }
 }

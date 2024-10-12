@@ -6,9 +6,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ArrayAdapter;
+import android.app.TimePickerDialog;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,61 +63,174 @@ public class CalendarFragment extends Fragment {
             fab.setVisibility(View.GONE);
         }
 
+        // Set the default date to today
+        Calendar calendar = Calendar.getInstance();
+        selectedDate = calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR);
+
+        // Set today's date in the calendar view
+        calendarView.setDate(calendar.getTimeInMillis(), true, true);
+
         calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
             selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+            String formattedDate = selectedDate.replace("/", "-"); // Convert date format for Firebase key
 
             // Update the event list for the selected date
             if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).updateEventList(selectedDate);
+                ((MainActivity) getActivity()).updateEventList(formattedDate);
             }
         });
 
         // Handle admin FAB click for adding events
-        fab.setOnClickListener(v -> openEventDialog());
+        fab.setOnClickListener(v -> openEventDialog(selectedDate));
 
         return view;
     }
 
-    private void openEventDialog() {
-        Log.d("CalendarFragment", "FAB clicked, opening dialog");
+    private void openEventDialog(String date) {
+        Log.d("CalendarFragment", "FAB clicked, opening dialog for date: " + date);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_add_event, null);
 
         builder.setView(dialogView);
-        builder.setTitle("Add Event on " + selectedDate);
+        TextView title = dialogView.findViewById(R.id.dialog_title);
+        title.setText("Add Event on " + date);
 
         EditText eventNameEditText = dialogView.findViewById(R.id.event_name);
-        EditText eventTimeEditText = dialogView.findViewById(R.id.event_time);
-        EditText eventVenueEditText = dialogView.findViewById(R.id.event_venue);
+        TextView eventTimeEditText = dialogView.findViewById(R.id.event_time);
+        Spinner clubSpinner = dialogView.findViewById(R.id.club_spinner);
+        Spinner venueSpinner = dialogView.findViewById(R.id.venue_spinner);
         EditText eventDetailsEditText = dialogView.findViewById(R.id.event_details);
+        ImageView closeButton = dialogView.findViewById(R.id.close_button);
+        EditText classroomNumberEditText = dialogView.findViewById(R.id.event_classroom_number);
 
-        builder.setPositiveButton("Save", (dialog, which) -> {
-            String eventName = eventNameEditText.getText().toString();
-            String eventTime = eventTimeEditText.getText().toString();
-            String eventVenue = eventVenueEditText.getText().toString();
-            String eventDetails = eventDetailsEditText.getText().toString();
+        // Set up club spinner
+        ArrayAdapter<CharSequence> clubAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.clubs_array, android.R.layout.simple_spinner_item);
+        clubAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        clubSpinner.setAdapter(clubAdapter);
 
-            if (!eventName.isEmpty() && !eventTime.isEmpty() && !eventVenue.isEmpty()) {
-                saveEventToFirebase(eventName, eventTime, eventVenue, eventDetails);
-            } else {
-                Toast.makeText(getContext(), "All fields are required", Toast.LENGTH_SHORT).show();
+        // Set up venue spinner
+        ArrayAdapter<CharSequence> venueAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.venue_array, android.R.layout.simple_spinner_item);
+        venueAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        venueSpinner.setAdapter(venueAdapter);
+
+        // Set up the venue spinner item selection listener
+        venueSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedVenue = parent.getItemAtPosition(position).toString();
+                if (selectedVenue.equals("ClassRoom")) {
+                    classroomNumberEditText.setVisibility(View.VISIBLE);
+                } else {
+                    classroomNumberEditText.setVisibility(View.GONE);
+                    classroomNumberEditText.setText(""); // Clear the input when not selected
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
             }
         });
 
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+        eventTimeEditText.setOnClickListener(v -> {
+            // Get current time
+            Calendar calendar = Calendar.getInstance();
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
 
-        builder.show();
+            // Create a TimePickerDialog in 24-hour format
+            TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                    (view, selectedHour, selectedMinute) -> {
+                        // Format time to display in EditText (24-hour format)
+                        String formattedTime = String.format("%02d:%02d", selectedHour, selectedMinute);
+                        eventTimeEditText.setText(formattedTime); // Set time in EditText
+                    }, hour, minute, true); // Set to true for 24-hour format
+
+            // Show the TimePickerDialog
+            timePickerDialog.show();
+        });
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+
+        // Add a custom "Save" button to the dialog
+        Button saveButton = dialogView.findViewById(R.id.save_button);
+        saveButton.setOnClickListener(v -> {
+            String eventName = eventNameEditText.getText().toString();
+            String eventTime = eventTimeEditText.getText().toString();
+            String eventVenue = venueSpinner.getSelectedItem().toString();
+            String eventClub = clubSpinner.getSelectedItem().toString();
+            String eventDetails = eventDetailsEditText.getText().toString();
+            String classroomNumber = classroomNumberEditText.getText().toString();
+
+            if (!eventName.isEmpty() && !eventVenue.isEmpty()) {
+                // If the venue is ClassRoom, ensure the classroom number is valid
+                if (eventVenue.equals("ClassRoom") && !classroomNumber.isEmpty()) {
+                    // Validate classroom number
+                    int classroomNum;
+                    try {
+                        classroomNum = Integer.parseInt(classroomNumber);
+                        if (classroomNum < 1 || classroomNum > 35) {
+                            Toast.makeText(getContext(), "Classroom number must be between 1 and 35", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(getContext(), "Invalid classroom number", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                // Save time or placeholder if not selected
+                saveEventToFirebase(eventName, eventTime.isEmpty() ? "-" : eventTime, eventVenue, eventClub, eventDetails, classroomNumber, dialog);
+            } else {
+                Toast.makeText(getContext(), "Event name and venue are required", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Set the close button action
+        closeButton.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
     }
 
     // Save event to Firebase under the selected date
-    private void saveEventToFirebase(String name, String time, String venue, String details) {
-        DatabaseReference eventRef = databaseReference.child(selectedDate).push();
-        eventRef.child("name").setValue(name);
-        eventRef.child("time").setValue(time);
-        eventRef.child("venue").setValue(venue);
-        eventRef.child("details").setValue(details);
-        Toast.makeText(getContext(), "Event added successfully", Toast.LENGTH_SHORT).show();
+    private void saveEventToFirebase(String name, String time, String venue, String club, String details, String classroomNumber, AlertDialog dialog) {
+        String formattedDate = selectedDate.replace("/", "-"); // Convert date format for Firebase key
+        DatabaseReference eventRef = databaseReference.child(formattedDate).push(); // Push creates a unique event ID
+
+        // Prepare data to be saved
+        Map<String, Object> eventData = new HashMap<>();
+        eventData.put("name", name);
+        eventData.put("time", time);
+        eventData.put("venue", venue);
+        eventData.put("club", club);
+        eventData.put("details", details);
+
+        // If the venue is a classroom, add the classroom number
+        if (venue.equals("ClassRoom")) {
+            eventData.put("classroomNumber", classroomNumber);
+        }
+
+        // Save event data to Firebase under the selected date
+        eventRef.setValue(eventData).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // If saving is successful, dismiss dialog and show a success message
+                dialog.dismiss();
+                Toast.makeText(getContext(), "Event added successfully!", Toast.LENGTH_SHORT).show();
+                // Update the event list immediately after saving
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).updateEventList(formattedDate);
+                }
+            } else {
+                // If saving fails, show an error message
+                Toast.makeText(getContext(), "Failed to save event. Try again.", Toast.LENGTH_SHORT).show();
+                Log.e("FirebaseError", "Error saving event: " + task.getException().getMessage());
+            }
+        });
     }
+
+
 }

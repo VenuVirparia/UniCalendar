@@ -5,17 +5,23 @@ public class Event {
     private String time;
     private String venue;
     private String details;
+    private String club; // New field
+    private String classroomNumber;
 
     // Empty constructor required for Firebase
     public Event() {}
 
-    public Event(String name, String time, String venue, String details) {
-        this.name = name;
-        this.time = time;
-        this.venue = venue;
-        this.details = details;
+    // Constructor with parameters
+    public Event(String eventName, String eventTime, String eventVenue, String eventDetails, String eventClub, String classroomNumber) {
+        this.name = eventName;
+        this.time = eventTime;
+        this.venue = eventVenue;
+        this.details = eventDetails;
+        this.club = eventClub;
+        this.classroomNumber = classroomNumber;
     }
 
+    // Getters
     public String getName() {
         return name;
     }
@@ -30,5 +36,13 @@ public class Event {
 
     public String getDetails() {
         return details;
+    }
+
+    public String getClub() {
+        return club;
+    }
+
+    public String getClassroomNumber() {
+        return classroomNumber;
     }
 }

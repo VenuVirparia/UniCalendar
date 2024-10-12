@@ -41,6 +41,8 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+    implementation 'com.google.firebase:firebase-core:21.1.1' // or the latest version
+
 //    implementation 'com.github.sundeepk:compact-calendar-view:3.0.0'
 
 

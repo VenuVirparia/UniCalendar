@@ -72,6 +72,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
+
         <!-- Fragment Container (Lower Half for Event List Fragment) -->
         <FrameLayout
             android:id="@+id/fragment_container_lower"
@@ -80,10 +81,19 @@
             android:layout_margin="16dp"
             android:background="@drawable/rounded_background"
             android:elevation="4dp"
-            app:layout_constraintTop_toBottomOf="@id/fragment_container_upper"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/fragment_container_upper" />
+
+<!--        <Button-->
+<!--            android:id="@+id/test_firebase_button"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="test_firebase_button"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/fragment_container_lower"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/fragment_container_upper"-->
+<!--            tools:layout_editor_absoluteX="148dp" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Profile Menu (Drawer) -->
