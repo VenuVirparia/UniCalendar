@@ -200,37 +200,87 @@ public class CalendarFragment extends Fragment {
     private void saveEventToFirebase(String name, String time, String venue, String club, String details, String classroomNumber, AlertDialog dialog) {
         String formattedDate = selectedDate.replace("/", "-"); // Convert date format for Firebase key
         DatabaseReference eventRef = databaseReference.child(formattedDate).push(); // Push creates a unique event ID
+        String eventId = eventRef.getKey();
 
-        // Prepare data to be saved
-        Map<String, Object> eventData = new HashMap<>();
-        eventData.put("name", name);
-        eventData.put("time", time);
-        eventData.put("venue", venue);
-        eventData.put("club", club);
-        eventData.put("details", details);
-
-        // If the venue is a classroom, add the classroom number
-        if (venue.equals("ClassRoom")) {
-            eventData.put("classroomNumber", classroomNumber);
-        }
+        // Create a new Event object
+        Event newEvent = new Event(eventId, formattedDate, name, time, venue, club, details, classroomNumber);
 
         // Save event data to Firebase under the selected date
-        eventRef.setValue(eventData).addOnCompleteListener(task -> {
+        eventRef.setValue(newEvent).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                // If saving is successful, dismiss dialog and show a success message
                 dialog.dismiss();
                 Toast.makeText(getContext(), "Event added successfully!", Toast.LENGTH_SHORT).show();
-                // Update the event list immediately after saving
                 if (getActivity() instanceof MainActivity) {
                     ((MainActivity) getActivity()).updateEventList(formattedDate);
                 }
             } else {
-                // If saving fails, show an error message
                 Toast.makeText(getContext(), "Failed to save event. Try again.", Toast.LENGTH_SHORT).show();
                 Log.e("FirebaseError", "Error saving event: " + task.getException().getMessage());
             }
         });
     }
+
+    // New method to delete an event
+    public void deleteEvent(Event event) {
+        String dateKey = event.getDateKey();
+        String eventId = event.getId();
+
+        DatabaseReference dateRef = databaseReference.child(dateKey);
+        DatabaseReference eventRef = dateRef.child(eventId);
+
+        eventRef.removeValue().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(getContext(), "Event deleted successfully", Toast.LENGTH_SHORT).show();
+
+                // Check if this was the last event for the date
+                dateRef.get().addOnCompleteListener(dateTask -> {
+                    if (dateTask.isSuccessful()) {
+                        if (!dateTask.getResult().exists()) {
+                            // If no events left, remove the date node
+                            dateRef.removeValue();
+                        }
+                    }
+                });
+
+                // Update the event list
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).updateEventList(dateKey);
+                }
+            } else {
+                Toast.makeText(getContext(), "Failed to delete event", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+//        // Prepare data to be saved
+//        Map<String, Object> eventData = new HashMap<>();
+//        eventData.put("name", name);
+//        eventData.put("time", time);
+//        eventData.put("venue", venue);
+//        eventData.put("club", club);
+//        eventData.put("details", details);
+//
+//        // If the venue is a classroom, add the classroom number
+//        if (venue.equals("ClassRoom")) {
+//            eventData.put("classroomNumber", classroomNumber);
+//        }
+//
+//        // Save event data to Firebase under the selected date
+//        eventRef.setValue(eventData).addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                // If saving is successful, dismiss dialog and show a success message
+//                dialog.dismiss();
+//                Toast.makeText(getContext(), "Event added successfully!", Toast.LENGTH_SHORT).show();
+//                // Update the event list immediately after saving
+//                if (getActivity() instanceof MainActivity) {
+//                    ((MainActivity) getActivity()).updateEventList(formattedDate);
+//                }
+//            } else {
+//                // If saving fails, show an error message
+//                Toast.makeText(getContext(), "Failed to save event. Try again.", Toast.LENGTH_SHORT).show();
+//                Log.e("FirebaseError", "Error saving event: " + task.getException().getMessage());
+//            }
+//        });
+//    }
 
 
 }

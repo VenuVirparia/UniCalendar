@@ -1,0 +1,106 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/dialog_background"
+    android:elevation="4dp"
+    android:layout_margin="16dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp">
+
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:fontFamily="@font/alice"
+            android:text="Add Event on "
+            android:textSize="20dp" />
+
+        <ImageView
+            android:id="@+id/close_button"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_close" />
+    </RelativeLayout>
+
+
+
+    <EditText
+        android:id="@+id/event_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:hint="Event Name"
+        android:padding="12dp" />
+    <!-- android:background="@drawable/edittext_background" -->
+    <!-- Dropdown for Club Selection -->
+    <Spinner
+        android:id="@+id/club_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="10dp" />
+    <!--android:background="@drawable/spinner_background"-->
+
+    <!-- Time Picker for Time Selection -->
+    <TextView
+        android:id="@+id/event_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="10dp"
+        android:hint="Event Time"
+        android:padding="12dp"
+        android:text="Select Time" />
+
+    <!-- android:background="@drawable/edittext_background"-->
+
+    <!-- Dropdown for Venue Selection -->
+    <Spinner
+        android:id="@+id/venue_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="10dp" />
+    <!--         android:background="@drawable/spinner_background" -->
+
+    <EditText
+        android:id="@+id/event_classroom_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Classroom Number (1-35)"
+        android:visibility="gone"
+        android:padding="12dp"
+        android:layout_marginTop="8dp"/>
+    <!-- android:background="@drawable/edittext_background" -->
+
+    <EditText
+        android:id="@+id/event_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="10dp"
+        android:hint="Event Details"
+        android:padding="12dp" />
+    <!--         android:background="@drawable/edittext_background" -->
+
+    <!-- Save Button -->
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/black"
+        android:textColor="@android:color/white"/>
+
+
+</LinearLayout>
