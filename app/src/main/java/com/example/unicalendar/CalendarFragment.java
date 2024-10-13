@@ -1,4 +1,5 @@
 package com.example.unicalendar;
+import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -27,8 +28,18 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import com.google.firebase.database.ValueEventListener;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
+import com.prolificinteractive.materialcalendarview.spans.DotSpan;
+
 
 public class CalendarFragment extends Fragment {
 
@@ -39,9 +50,9 @@ public class CalendarFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
-
-        CalendarView calendarView = view.findViewById(R.id.calendarView);
+        MaterialCalendarView materialCalendarView = view.findViewById(R.id.calendarView);
         FloatingActionButton fab = view.findViewById(R.id.fab_admin);
+
 
         // Initialize Firebase database reference
         databaseReference = FirebaseDatabase.getInstance().getReference("events");
@@ -63,15 +74,11 @@ public class CalendarFragment extends Fragment {
             fab.setVisibility(View.GONE);
         }
 
-        // Set the default date to today
-        Calendar calendar = Calendar.getInstance();
-        selectedDate = calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR);
-
         // Set today's date in the calendar view
-        calendarView.setDate(calendar.getTimeInMillis(), true, true);
-
-        calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
-            selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+        materialCalendarView.setSelectedDate(CalendarDay.today());
+        // Set up date change listener
+        materialCalendarView.setOnDateChangedListener((widget, date, selected) -> {
+            selectedDate = date.getDay() + "/" + (date.getMonth()) + "/" + date.getYear();
             String formattedDate = selectedDate.replace("/", "-"); // Convert date format for Firebase key
 
             // Update the event list for the selected date
@@ -79,10 +86,26 @@ public class CalendarFragment extends Fragment {
                 ((MainActivity) getActivity()).updateEventList(formattedDate);
             }
         });
+        // Set the default date to today
+//        Calendar calendar = Calendar.getInstance();
+//        selectedDate = calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR);
+//
+//        // Set today's date in the calendar view
+//        calendarView.setDate(calendar.getTimeInMillis(), true, true);
+//
+//        calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
+//            selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+//            String formattedDate = selectedDate.replace("/", "-"); // Convert date format for Firebase key
+//
+//            // Update the event list for the selected date
+//            if (getActivity() instanceof MainActivity) {
+//                ((MainActivity) getActivity()).updateEventList(formattedDate);
+//            }
+//        });
 
         // Handle admin FAB click for adding events
         fab.setOnClickListener(v -> openEventDialog(selectedDate));
-
+        loadAndHighlightEvents(materialCalendarView);
         return view;
     }
 
@@ -309,5 +332,47 @@ public class CalendarFragment extends Fragment {
 //        });
 //    }
 
+    private void loadAndHighlightEvents(MaterialCalendarView calendarView) {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dateSnapshot : dataSnapshot.getChildren()) {
+                    String dateKey = dateSnapshot.getKey();
+                    for (DataSnapshot eventSnapshot : dateSnapshot.getChildren()) {
+                        String eventId = eventSnapshot.getKey();
+                        String name = eventSnapshot.child("name").getValue(String.class);
+                        String time = eventSnapshot.child("time").getValue(String.class);
+                        String venue = eventSnapshot.child("venue").getValue(String.class);
+                        String club = eventSnapshot.child("club").getValue(String.class);
+                        String details = eventSnapshot.child("details").getValue(String.class);
+                        String classroomNumber = eventSnapshot.child("classroomNumber").getValue(String.class);
+
+                        if (dateKey != null && club != null) {  // Add null check for club
+                            String[] dateParts = dateKey.split("-");
+                            if (dateParts.length == 3) {
+                                try {
+                                    int day = Integer.parseInt(dateParts[0]);
+                                    int month = Integer.parseInt(dateParts[1]); // CalendarDay uses 0-indexed months
+                                    int year = Integer.parseInt(dateParts[2]);
+
+                                    CalendarDay eventDay = CalendarDay.from(year, month, day);
+
+                                    // Apply decoration based on club
+                                    calendarView.addDecorator(new ClubEventDecorator(eventDay, club));
+                                } catch (NumberFormatException e) {
+                                    Log.e("CalendarFragment", "Invalid date format: " + dateKey);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("CalendarFragment", "Failed to load events: " + databaseError.getMessage());
+            }
+        });
+    }
 
 }
