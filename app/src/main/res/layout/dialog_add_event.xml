@@ -6,13 +6,7 @@
     android:background="@drawable/dialog_background"
     android:elevation="4dp"
     android:layout_margin="16dp">
-    <!-- Close Button -->
-<!--    <ImageView-->
-<!--        android:id="@+id/close_button"-->
-<!--        android:layout_width="20dp"-->
-<!--        android:layout_height="20dp"-->
-<!--        android:layout_gravity="end"-->
-<!--        android:src="@drawable/ic_close" />-->
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

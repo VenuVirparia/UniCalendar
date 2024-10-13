@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             // Set up fragments
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container_upper, new CalendarFragment())
+                    .replace(R.id.fragment_container_upper, new CalendarFragment(),"calendar_fragment")
                     .replace(R.id.fragment_container_lower, new EventListFragment())
                     .commit();
 
@@ -120,7 +120,9 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
+    public CalendarFragment getCalendarFragment() {
+        return (CalendarFragment) getSupportFragmentManager().findFragmentByTag("calendar_fragment");
+    }
 
 
     @Override
@@ -138,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<Event> events = new ArrayList<>();
                 for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+                    String eventId = eventSnapshot.getKey();  // Capture the Firebase event ID
                     String eventName = eventSnapshot.child("name").getValue(String.class);
                     String eventTime = eventSnapshot.child("time").getValue(String.class);
                     String eventVenue = eventSnapshot.child("venue").getValue(String.class);
@@ -146,11 +149,13 @@ public class MainActivity extends AppCompatActivity {
                     String classroomNumber = eventSnapshot.child("classroomNumber").getValue(String.class);
 
                     if (eventName != null) {
-                        Event event = new Event(eventName, eventTime, eventVenue, eventDetails, eventClub, classroomNumber);
+                        // Pass the eventId to the Event constructor
+                        Event event = new Event(eventId, selectedDate, eventName, eventTime, eventVenue, eventClub, eventDetails, classroomNumber);
                         events.add(event);
                     }
                 }
 
+                // Find the EventListFragment and update he event list
                 EventListFragment eventListFragment = (EventListFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.fragment_container_lower);
 
@@ -166,4 +171,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 }
