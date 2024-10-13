@@ -251,6 +251,33 @@ public class CalendarFragment extends Fragment {
             }
         });
     }
+    public void updateEvent(Event event) {
+        String dateKey = event.getDateKey();
+        String eventId = event.getId();
+
+        DatabaseReference eventRef = databaseReference.child(dateKey).child(eventId);
+
+        Map<String, Object> eventUpdates = new HashMap<>();
+        eventUpdates.put("name", event.getName());
+        eventUpdates.put("time", event.getTime());
+        eventUpdates.put("venue", event.getVenue());
+        eventUpdates.put("club", event.getClub());
+        eventUpdates.put("details", event.getDetails());
+        eventUpdates.put("classroomNumber", event.getClassroomNumber());
+
+        eventRef.updateChildren(eventUpdates).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(getContext(), "Event updated successfully", Toast.LENGTH_SHORT).show();
+
+                // Update the event list
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).updateEventList(dateKey);
+                }
+            } else {
+                Toast.makeText(getContext(), "Failed to update event", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 //        // Prepare data to be saved
 //        Map<String, Object> eventData = new HashMap<>();
 //        eventData.put("name", name);
