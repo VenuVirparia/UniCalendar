@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="fontcolor">#EBEBEA</color>
+    <color name="backgroundcolor">#181B1B</color>
+    <color name="todaysDate">#EBEBEA</color>
+    <color name="exam">#7A365F</color>
+    <color name="university">#C5A444</color>
+    <color name="other">#547E4E</color>
+    <color name="holiday">#335D6B</color>
+    <color name="more">#99661A</color>
+    <color name="link">#2571CC</color>
+    <color name="select">#9B9B9B</color>
+
+</resources>

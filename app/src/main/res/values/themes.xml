@@ -3,6 +3,20 @@
     <style name="Base.Theme.UniCalendar" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/university</item>
+        <item name="colorPrimaryVariant">@color/exam</item>
+        <item name="colorOnPrimary">@color/fontcolor</item>
+        <!-- Secondary brand color -->
+        <item name="colorSecondary">@color/other</item>
+        <item name="colorSecondaryVariant">@color/holiday</item>
+        <item name="colorOnSecondary">@color/fontcolor</item>
+        <!-- Status bar color -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Background color -->
+        <item name="android:windowBackground">@color/backgroundcolor</item>
+        <!-- Text color -->
+        <item name="android:textColor">@color/fontcolor</item>
+
     </style>
     <style name="Theme.UniCalendar.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here -->

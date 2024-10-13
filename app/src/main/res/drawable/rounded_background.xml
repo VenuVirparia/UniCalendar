@@ -4,7 +4,6 @@
     <corners android:radius="16dp"/>
 
     <!-- Background Color -->
-    <solid android:color="#9BB7B8"/>
 
     <!-- Padding Inside the Shape -->
     <padding
@@ -16,5 +15,5 @@
     <!-- Border (Stroke) -->
     <stroke
         android:width="2dp"
-        android:color="#4A6B6B"/> <!-- Change this to any color to fit your design -->
+        android:color="@color/lift"/> <!-- Change this to any color to fit your design -->
 </shape>

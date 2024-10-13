@@ -99,8 +99,8 @@
         android:layout_height="wrap_content"
         android:text="Save"
         android:layout_marginTop="16dp"
-        android:backgroundTint="@color/black"
-        android:textColor="@android:color/white"/>
+        android:backgroundTint="@color/backgroundcolor"
+        android:textColor="@color/fontcolor"/>
 
 
 </LinearLayout>

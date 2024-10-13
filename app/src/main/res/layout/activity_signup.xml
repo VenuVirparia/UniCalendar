@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#9BB7B8"
+    android:background="@color/backgroundcolor"
     android:scrollbarSize="18dp"
     tools:context=".signup">
 
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/alice"
         android:text="@string/create_new_account"
-        android:textColorLink="#49454F"
+        android:textColorLink="@color/fontcolor"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,19 +31,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
 
-<!--    <EditText-->
-<!--        android:id="@+id/userName"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="15dp"-->
-<!--        android:ems="10"-->
-<!--        android:hint="Enter Username"-->
-<!--        android:inputType="text"-->
-<!--        android:textSize="18sp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.497"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/roles" />-->
+    <!--    <EditText-->
+    <!--        android:id="@+id/userName"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="15dp"-->
+    <!--        android:ems="10"-->
+    <!--        android:hint="Enter Username"-->
+    <!--        android:inputType="text"-->
+    <!--        android:textSize="18sp"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.497"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/roles" />-->
 
     <EditText
         android:id="@+id/email"
@@ -71,39 +71,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email" />
 
-<!--    <EditText-->
-<!--        android:id="@+id/repassword"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="15dp"-->
-<!--        android:ems="10"-->
-<!--        android:hint="@string/re_enter_password"-->
-<!--        android:inputType="textPassword"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.502"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/password" />-->
-
-<!--    <Spinner-->
-<!--        android:id="@+id/roles"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:scrollbarSize="4dp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/createAccount"-->
-<!--        android:entries="@array/roles_array"/>-->
-
     <Button
         android:id="@+id/Register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:background="#C1FDFD"
+        android:backgroundTint="@color/fontcolor"
+        android:textColor="@color/backgroundcolor"
         android:fontFamily="@font/alice"
         android:text="Register"
-        android:textColorLink="#49454F"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password" />
@@ -115,7 +91,7 @@
         android:layout_marginTop="15dp"
         android:fontFamily="@font/alice"
         android:text="Already Registered? Log in"
-        android:textColor="#49454F"
+        android:textColor="@color/link"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

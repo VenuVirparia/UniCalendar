@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:background="#9BB7B8"
+    android:background="@color/backgroundcolor"
     android:layout_height="match_parent"
     tools:context=".splashScreen">
 
@@ -26,7 +26,7 @@
         android:layout_marginBottom="65dp"
         android:fontFamily="@font/aclonica"
         android:text="By Venu Virparia &amp; Nand Rabadiya"
-        android:textColor="#595453"
+        android:textColor="@color/fontcolor"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,6 +40,7 @@
         android:fontFamily="@font/aclonica"
         android:text="UniCalendar"
         android:textSize="50sp"
+        android:textColor="@color/fontcolor"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
@@ -52,6 +53,7 @@
         android:fontFamily="@font/alice"
         android:text="All in One Place—Events, Dates, and More "
         android:textSize="18sp"
+        android:textColor="@color/fontcolor"
         app:layout_constraintEnd_toEndOf="@+id/UniCalendar"
         app:layout_constraintStart_toStartOf="@+id/UniCalendar"
         app:layout_constraintTop_toBottomOf="@+id/UniCalendar" />

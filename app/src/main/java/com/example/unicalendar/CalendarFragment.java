@@ -52,7 +52,7 @@ public class CalendarFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
         MaterialCalendarView materialCalendarView = view.findViewById(R.id.calendarView);
         FloatingActionButton fab = view.findViewById(R.id.fab_admin);
-
+        materialCalendarView.addDecorator(new TodayDecorator(getContext()));
 
         // Initialize Firebase database reference
         databaseReference = FirebaseDatabase.getInstance().getReference("events");
@@ -233,6 +233,7 @@ public class CalendarFragment extends Fragment {
             if (task.isSuccessful()) {
                 dialog.dismiss();
                 Toast.makeText(getContext(), "Event added successfully!", Toast.LENGTH_SHORT).show();
+                updateCalendarView();
                 if (getActivity() instanceof MainActivity) {
                     ((MainActivity) getActivity()).updateEventList(formattedDate);
                 }
@@ -262,6 +263,7 @@ public class CalendarFragment extends Fragment {
                             // If no events left, remove the date node
                             dateRef.removeValue();
                         }
+                        updateCalendarView();
                     }
                 });
 
@@ -291,7 +293,7 @@ public class CalendarFragment extends Fragment {
         eventRef.updateChildren(eventUpdates).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(getContext(), "Event updated successfully", Toast.LENGTH_SHORT).show();
-
+                updateCalendarView();
                 // Update the event list
                 if (getActivity() instanceof MainActivity) {
                     ((MainActivity) getActivity()).updateEventList(dateKey);
@@ -301,6 +303,12 @@ public class CalendarFragment extends Fragment {
             }
         });
     }
+    private void updateCalendarView() {
+        MaterialCalendarView calendarView = getView().findViewById(R.id.calendarView);
+        calendarView.removeDecorators();
+        loadAndHighlightEvents(calendarView);
+    }
+
 //        // Prepare data to be saved
 //        Map<String, Object> eventData = new HashMap<>();
 //        eventData.put("name", name);
@@ -336,36 +344,41 @@ public class CalendarFragment extends Fragment {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Map<String, DayEvents> eventsByDate = new HashMap<>();
+
                 for (DataSnapshot dateSnapshot : dataSnapshot.getChildren()) {
                     String dateKey = dateSnapshot.getKey();
-                    for (DataSnapshot eventSnapshot : dateSnapshot.getChildren()) {
-                        String eventId = eventSnapshot.getKey();
-                        String name = eventSnapshot.child("name").getValue(String.class);
-                        String time = eventSnapshot.child("time").getValue(String.class);
-                        String venue = eventSnapshot.child("venue").getValue(String.class);
-                        String club = eventSnapshot.child("club").getValue(String.class);
-                        String details = eventSnapshot.child("details").getValue(String.class);
-                        String classroomNumber = eventSnapshot.child("classroomNumber").getValue(String.class);
+                    if (dateKey != null) {
+                        String[] dateParts = dateKey.split("-");
+                        if (dateParts.length == 3) {
+                            try {
+                                int day = Integer.parseInt(dateParts[0]);
+                                int month = Integer.parseInt(dateParts[1]); // CalendarDay uses 0-indexed months
+                                int year = Integer.parseInt(dateParts[2]);
+                                CalendarDay eventDay = CalendarDay.from(year, month, day);
 
-                        if (dateKey != null && club != null) {  // Add null check for club
-                            String[] dateParts = dateKey.split("-");
-                            if (dateParts.length == 3) {
-                                try {
-                                    int day = Integer.parseInt(dateParts[0]);
-                                    int month = Integer.parseInt(dateParts[1]); // CalendarDay uses 0-indexed months
-                                    int year = Integer.parseInt(dateParts[2]);
+                                DayEvents dayEvents = eventsByDate.computeIfAbsent(dateKey, k -> new DayEvents(eventDay));
 
-                                    CalendarDay eventDay = CalendarDay.from(year, month, day);
-
-                                    // Apply decoration based on club
-                                    calendarView.addDecorator(new ClubEventDecorator(eventDay, club));
-                                } catch (NumberFormatException e) {
-                                    Log.e("CalendarFragment", "Invalid date format: " + dateKey);
+                                for (DataSnapshot eventSnapshot : dateSnapshot.getChildren()) {
+                                    String club = eventSnapshot.child("club").getValue(String.class);
+                                    if (club != null) {
+                                        dayEvents.addClub(club);
+                                    }
                                 }
+
+
+                            } catch (NumberFormatException e) {
+                                Log.e("CalendarFragment", "Invalid date format: " + dateKey);
                             }
                         }
                     }
                 }
+
+                // Apply decorators for each day with events
+                for (DayEvents dayEvents : eventsByDate.values()) {
+                    if (!dayEvents.getClubs().isEmpty()) {
+                        calendarView.addDecorator(new ClubEventDecorator(getContext(), dayEvents));
+                    }                }
             }
 
             @Override
@@ -374,5 +387,4 @@ public class CalendarFragment extends Fragment {
             }
         });
     }
-
 }

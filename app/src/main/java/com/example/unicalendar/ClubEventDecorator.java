@@ -1,73 +1,82 @@
 package com.example.unicalendar;
 
-import android.graphics.Color;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.text.style.LineBackgroundSpan;
+import androidx.core.content.ContextCompat;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
-import com.prolificinteractive.materialcalendarview.spans.DotSpan;
+
+import java.util.List;
 
 public class ClubEventDecorator implements DayViewDecorator {
+    private final Context context;
+    private final DayEvents dayEvents;
 
-    private final CalendarDay date;
-    private final String club;
-
-    public ClubEventDecorator(CalendarDay date, String club) {
-        this.date = date;
-        this.club = club;
+    public ClubEventDecorator(Context context, DayEvents dayEvents) {
+        this.context = context;
+        this.dayEvents = dayEvents;
     }
 
     @Override
     public boolean shouldDecorate(CalendarDay day) {
-        return date != null && day.equals(date);
+        return dayEvents.getDate().equals(day);
     }
-
 
     @Override
     public void decorate(DayViewFacade view) {
-        int color;
-        switch (club) {
-            case "University":
-                color = Color.parseColor("#FF5733"); // Vibrant orange
-                break;
-            case "Sports Club":
-                color = Color.parseColor("#2ECC71"); // Bright green
-                break;
-            case "Samvaad":
-                color = Color.parseColor("#1F618D"); // Dark blue
-                break;
-            case "IETE":
-                color = Color.parseColor("#58D68D"); // Light green
-                break;
-            case "GDSC":
-                color = Color.parseColor("#F39C12"); // Orange-yellow
-                break;
-            case "CSI":
-                color = Color.parseColor("#9B59B6"); // Purple
-                break;
-            case "Shutterbugs":
-                color = Color.parseColor("#E74C3C"); // Red
-                break;
-            case "Readers Community":
-                color = Color.parseColor("#D35400"); // Dark orange
-                break;
-            case "Decibel":
-                color = Color.parseColor("#34495E"); // Slate blue
-                break;
-            case "Holiday":
-                color = Color.parseColor("#F1C40F"); // Yellow
-                break;
-            case "Internal Exam":
-                color = Color.parseColor("#E67E22"); // Burnt orange
-                break;
-            case "External Exam":
-                color = Color.parseColor("#C0392B"); // Crimson red
-                break;
-            default:
-                color = Color.GRAY; // Default color for any other club
-        }
-        view.addSpan(new DotSpan(8, color)); // Set the size and color of the dot
+        view.addSpan(new EventBackgroundSpan(context, dayEvents));
     }
 
-}
+    private class EventBackgroundSpan implements LineBackgroundSpan {
+        private final Paint paint;
+        private final DayEvents events;
 
+        EventBackgroundSpan(Context context, DayEvents events) {
+            this.events = events;
+            this.paint = new Paint();
+            paint.setAntiAlias(true);
+        }
+
+        @Override
+        public void drawBackground(Canvas canvas, Paint paint,
+                                   int left, int right, int top, int baseline, int bottom,
+                                   CharSequence text, int start, int end, int lnum) {
+            int color;
+            List<String> eventTypes = events.getClubs();
+            if (eventTypes.isEmpty()) {
+                // No events, don't draw anything
+                return;
+            }
+            if (eventTypes.size() > 1) {
+                color = ContextCompat.getColor(context, R.color.more);
+            } else {
+                String eventType = eventTypes.get(0);
+                switch (eventType) {
+                    case "External Exam":
+                    case "Internal Exam":
+                        color = ContextCompat.getColor(context, R.color.exam);
+                        break;
+                    case "Holiday":
+                        color = ContextCompat.getColor(context, R.color.holiday);
+                        break;
+                    case "University":
+                        color = ContextCompat.getColor(context, R.color.university);
+                        break;
+                    default:
+                        color = ContextCompat.getColor(context, R.color.other);
+                }
+            }
+
+            int radius = (right - left) / 3;
+            int centerX = (right + left) / 2;
+            int centerY = (bottom + top) / 2;
+
+            this.paint.setColor(color);
+            canvas.drawCircle(centerX, centerY, radius, this.paint);
+        }
+    }
+}

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#9BB7B8"
+    android:background="@color/backgroundcolor"
     tools:context=".login">
 
     <TextView
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/alice"
         android:text="@string/login"
-        android:textColorLink="#49454F"
+        android:textColorLink="@color/fontcolor"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +61,8 @@
         android:layout_marginTop="15dp"
         android:fontFamily="@font/alice"
         android:text="@string/loginBtn"
-        android:textColorLink="#49454F"
+        android:backgroundTint="@color/fontcolor"
+        android:textColor="@color/backgroundcolor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password" />
@@ -73,7 +74,7 @@
         android:layout_marginTop="20dp"
         android:fontFamily="@font/alice"
         android:text="New User? Register"
-        android:textColor="#49454F"
+        android:textColor="@color/link"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
