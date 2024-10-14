@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,6 +26,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.text.SimpleDateFormat;
@@ -151,22 +154,40 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
         View dialogView = inflater.inflate(R.layout.dialog_edit_event, null);
         builder.setView(dialogView);
 
-        EditText eventNameEditText = dialogView.findViewById(R.id.event_name);
-        TextView eventTimeTextView = dialogView.findViewById(R.id.event_time);
-        Spinner venueSpinner = dialogView.findViewById(R.id.venue_spinner);
-        Spinner clubSpinner = dialogView.findViewById(R.id.club_spinner);
-        EditText eventDetailsEditText = dialogView.findViewById(R.id.event_details);
-        EditText classroomNumberEditText = dialogView.findViewById(R.id.event_classroom_number);
+        TextInputEditText eventNameEditText = dialogView.findViewById(R.id.event_name);
+        TextInputEditText eventTimeTextView = dialogView.findViewById(R.id.event_time);
+        AutoCompleteTextView venueSpinner = dialogView.findViewById(R.id.venue_spinner);
+        AutoCompleteTextView clubSpinner = dialogView.findViewById(R.id.club_spinner);
+        TextInputEditText eventDetailsEditText = dialogView.findViewById(R.id.event_details);
+        TextInputEditText classroomNumberEditText = dialogView.findViewById(R.id.event_classroom_number);
+        TextInputLayout classroomNumberLayout = dialogView.findViewById(R.id.classroom_number_layout);
+
+        // Set up the AutoCompleteTextView for clubs
+        ArrayAdapter<CharSequence> clubAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.clubs_array, android.R.layout.simple_dropdown_item_1line);
+        clubSpinner.setAdapter(clubAdapter);
+
+        // Set up the AutoCompleteTextView for venues
+        ArrayAdapter<CharSequence> venueAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.venue_array, android.R.layout.simple_dropdown_item_1line);
+        venueSpinner.setAdapter(venueAdapter);
 
         // Set current values
         eventNameEditText.setText(event.getName());
         eventTimeTextView.setText(event.getTime());
+        clubSpinner.setText(event.getClub(), false);
+        venueSpinner.setText(event.getVenue(), false);
         eventDetailsEditText.setText(event.getDetails());
         classroomNumberEditText.setText(event.getClassroomNumber());
-
+        if ("ClassRoom".equals(event.getVenue())) {
+            classroomNumberLayout.setVisibility(View.VISIBLE);
+            classroomNumberEditText.setText(event.getClassroomNumber());
+        } else {
+            classroomNumberLayout.setVisibility(View.GONE);
+        }
         // Populate spinners (you'll need to implement these methods)
-        populateVenueSpinner(venueSpinner, event.getVenue());
-        populateClubSpinner(clubSpinner, event.getClub());
+//        populateVenueSpinner(venueSpinner, event.getVenue());
+//        populateClubSpinner(clubSpinner, event.getClub());
 
         // Time picker
         eventTimeTextView.setOnClickListener(v -> {
@@ -184,8 +205,8 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
 
             event.setName(eventNameEditText.getText().toString());
             event.setTime(eventTimeTextView.getText().toString());
-            event.setVenue(venueSpinner.getSelectedItem().toString());
-            event.setClub(clubSpinner.getSelectedItem().toString());
+            event.setVenue(venueSpinner.getText().toString());
+            event.setClub(clubSpinner.getText().toString());
             event.setDetails(eventDetailsEditText.getText().toString());
             event.setClassroomNumber(classroomNumberEditText.getText().toString());
 //

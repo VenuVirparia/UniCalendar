@@ -4,9 +4,9 @@
     <color name="backgroundcolor">#181B1B</color>
     <color name="todaysDate">#EBEBEA</color>
 
-    <color name="exam">#7A365F</color>
+    <color name="holiday">#7A365F</color>
     <color name="other">#568C4F</color>
-    <color name="holiday">#3E7181</color>
+    <color name="exam">#3E7181</color>
 
     <color name="link">#2571CC</color>
     <color name="select">#9B9B9B</color>

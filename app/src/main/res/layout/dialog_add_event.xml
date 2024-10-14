@@ -1,115 +1,160 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@drawable/dialog_background"
-    android:elevation="4dp"
-    android:backgroundTint="@color/backgroundcolor"
-    android:layout_margin="16dp">
+    android:layout_margin="16dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/backgroundcolor"
-        android:layout_marginBottom="25dp">
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:background="@color/backgroundcolor">
 
-        <TextView
-            android:id="@+id/dialog_title"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:fontFamily="@font/alice"
-            android:text="Add Event on "
-            android:textColor="@color/fontcolor"
-            android:textSize="20dp" />
+            android:layout_marginBottom="24dp">
 
-        <ImageView
-            android:id="@+id/close_button"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
-            android:src="@drawable/ic_close" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/dialog_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/alice"
+                android:text="Add New Event"
+                android:textColor="@color/fontcolor"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
+            <ImageView
+                android:id="@+id/close_button"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_close" />
+        </RelativeLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/fontcolor"
+            app:hintTextColor="@color/fontcolor"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-    <EditText
-        android:id="@+id/event_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:textColor="@color/fontcolor"
-        android:hint="Event Name"
-        android:padding="12dp" />
-    <!-- android:background="@drawable/edittext_background" -->
-    <!-- Dropdown for Club Selection -->
-    <Spinner
-        android:id="@+id/club_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:outlineSpotShadowColor="@color/fontcolor"
-        android:outlineAmbientShadowColor="@color/fontcolor"
-        android:layout_marginBottom="10dp" />
-        <!--android:background="@drawable/spinner_background"-->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/event_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Event Name"
+                android:textColor="@color/fontcolor" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Time Picker for Time Selection -->
-    <TextView
-        android:id="@+id/event_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="10dp"
-        android:textColor="@color/fontcolor"
-        android:hint="Event Time"
-        android:padding="12dp"
-        android:text="Select Time" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/fontcolor"
+            app:hintTextColor="@color/fontcolor"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-    <!-- android:background="@drawable/edittext_background"-->
+            <AutoCompleteTextView
+                android:id="@+id/club_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Select Club"
+                android:textColor="@color/fontcolor"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Dropdown for Venue Selection -->
-    <Spinner
-        android:id="@+id/venue_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="10dp" />
-<!--         android:background="@drawable/spinner_background" -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/fontcolor"
+            app:hintTextColor="@color/fontcolor"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-    <EditText
-        android:id="@+id/event_classroom_number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Classroom Number (1-35)"
-        android:textColor="@color/fontcolor"
-        android:visibility="gone"
-        android:padding="12dp"
-        android:layout_marginTop="8dp"/>
-    <!-- android:background="@drawable/edittext_background" -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/event_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Event Time"
+                android:textColor="@color/fontcolor"
+                android:focusable="false"
+                android:clickable="true" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/event_details"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/fontcolor"
-        android:layout_marginBottom="10dp"
-        android:hint="Event Details"
-        android:padding="12dp" />
-    <!--         android:background="@drawable/edittext_background" -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/fontcolor"
+            app:hintTextColor="@color/fontcolor"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
-    <!-- Save Button -->
-    <Button
-        android:id="@+id/save_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@color/fontcolor"
-        android:textColor="@color/backgroundcolor"/>
+            <AutoCompleteTextView
+                android:id="@+id/venue_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Select Venue"
+                android:textColor="@color/fontcolor"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/classroom_number_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:boxStrokeColor="@color/fontcolor"
+            app:hintTextColor="@color/fontcolor"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:visibility="gone">
 
-</LinearLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/event_classroom_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Classroom Number (1-35)"
+                android:textColor="@color/fontcolor"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:boxStrokeColor="@color/fontcolor"
+            app:hintTextColor="@color/fontcolor"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/event_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Event Details"
+                android:textColor="@color/fontcolor"
+                android:inputType="textMultiLine"
+                android:minLines="3" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/save_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Event"
+            android:textAllCaps="false"
+            android:padding="12dp"
+            app:cornerRadius="8dp"
+            android:backgroundTint="@color/fontcolor"
+            android:textColor="@color/backgroundcolor" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -1,4 +1,7 @@
 package com.example.unicalendar;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import android.app.AlertDialog;
@@ -8,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
@@ -69,152 +73,130 @@ public class CalendarFragment extends Fragment {
         databaseReference = FirebaseDatabase.getInstance().getReference("events");
 
         setupCustomHeader();
-        // Get current logged-in user
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            String userEmail = currentUser.getEmail();
-            Log.d("CalendarFragment", "User Email: " + userEmail);
+        checkAdminStatus(fab);
+        setupCalendarView();
 
-            // Check if the user is an admin
-            if ("admin@gmail.com".equals(userEmail)) {
-                fab.setVisibility(View.VISIBLE);
-            } else {
-                fab.setVisibility(View.GONE);
-            }
-        } else {
-            Log.d("CalendarFragment", "No user is logged in.");
-            fab.setVisibility(View.GONE);
-        }
-
-        // Set today's date in the calendar view
-        materialCalendarView.setSelectedDate(CalendarDay.today());
-        // Set up date change listener
-        materialCalendarView.setOnDateChangedListener((widget, date, selected) -> {
-            selectedDate = date.getDay() + "/" + (date.getMonth()) + "/" + date.getYear();
-            String formattedDate = selectedDate.replace("/", "-"); // Convert date format for Firebase key
-
-            // Update the event list for the selected date
-            if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).updateEventList(formattedDate);
-            }
-        });
-
-
-        // Handle admin FAB click for adding events
         fab.setOnClickListener(v -> openEventDialog(selectedDate));
         loadAndHighlightEvents(materialCalendarView);
         return view;
+
+    }
+    private void checkAdminStatus(FloatingActionButton fab) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null && "admin@gmail.com".equals(currentUser.getEmail())) {
+            fab.setVisibility(View.VISIBLE);
+        } else {
+            fab.setVisibility(View.GONE);
+        }
+    }
+
+    private void setupCalendarView() {
+        materialCalendarView.setSelectedDate(CalendarDay.today());
+        materialCalendarView.setOnDateChangedListener((widget, date, selected) -> {
+            selectedDate = String.format(Locale.getDefault(), "%d-%d-%d", date.getDay(), date.getMonth(), date.getYear());
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).updateEventList(selectedDate);
+            }
+        });
     }
 
     private void openEventDialog(String date) {
-        Log.d("CalendarFragment", "FAB clicked, opening dialog for date: " + date);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_add_event, null);
-
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_event, null);
         builder.setView(dialogView);
-        TextView title = dialogView.findViewById(R.id.dialog_title);
-        title.setText("Add Event on " + date);
 
-        EditText eventNameEditText = dialogView.findViewById(R.id.event_name);
-        TextView eventTimeEditText = dialogView.findViewById(R.id.event_time);
-        Spinner clubSpinner = dialogView.findViewById(R.id.club_spinner);
-        Spinner venueSpinner = dialogView.findViewById(R.id.venue_spinner);
-        EditText eventDetailsEditText = dialogView.findViewById(R.id.event_details);
+        TextInputEditText eventNameInput = dialogView.findViewById(R.id.event_name);
+        TextInputEditText eventTimeInput = dialogView.findViewById(R.id.event_time);
+        AutoCompleteTextView clubSpinner = dialogView.findViewById(R.id.club_spinner);
+        AutoCompleteTextView venueSpinner = dialogView.findViewById(R.id.venue_spinner);
+        TextInputEditText eventDetailsInput = dialogView.findViewById(R.id.event_details);
         ImageView closeButton = dialogView.findViewById(R.id.close_button);
-        EditText classroomNumberEditText = dialogView.findViewById(R.id.event_classroom_number);
+        TextInputLayout classroomNumberLayout = dialogView.findViewById(R.id.classroom_number_layout);
+        TextInputEditText classroomNumberInput = dialogView.findViewById(R.id.event_classroom_number);
 
-        // Set up club spinner
-        ArrayAdapter<CharSequence> clubAdapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.clubs_array, android.R.layout.simple_spinner_item);
-        clubAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        clubSpinner.setAdapter(clubAdapter);
+        TextView dialogTitle = dialogView.findViewById(R.id.dialog_title);
+        dialogTitle.setText(String.format("Add Event on %s", date));
 
-        // Set up venue spinner
-        ArrayAdapter<CharSequence> venueAdapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.venue_array, android.R.layout.simple_spinner_item);
-        venueAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        venueSpinner.setAdapter(venueAdapter);
+        setupSpinners(clubSpinner, venueSpinner);
+        setupTimePicker(eventTimeInput);
 
-        // Set up the venue spinner item selection listener
-        venueSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedVenue = parent.getItemAtPosition(position).toString();
-                if (selectedVenue.equals("ClassRoom")) {
-                    classroomNumberEditText.setVisibility(View.VISIBLE);
-                } else {
-                    classroomNumberEditText.setVisibility(View.GONE);
-                    classroomNumberEditText.setText(""); // Clear the input when not selected
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Do nothing
-            }
-        });
-
-        eventTimeEditText.setOnClickListener(v -> {
-            // Get current time
-            Calendar calendar = Calendar.getInstance();
-            int hour = calendar.get(Calendar.HOUR_OF_DAY);
-            int minute = calendar.get(Calendar.MINUTE);
-
-            // Create a TimePickerDialog in 24-hour format
-            TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
-                    (view, selectedHour, selectedMinute) -> {
-                        // Format time to display in EditText (24-hour format)
-                        String formattedTime = String.format("%02d:%02d", selectedHour, selectedMinute);
-                        eventTimeEditText.setText(formattedTime); // Set time in EditText
-                    }, hour, minute, true); // Set to true for 24-hour format
-
-            // Show the TimePickerDialog
-            timePickerDialog.show();
-        });
-
-        // Create the AlertDialog
         AlertDialog dialog = builder.create();
 
-        // Add a custom "Save" button to the dialog
-        Button saveButton = dialogView.findViewById(R.id.save_button);
-        saveButton.setOnClickListener(v -> {
-            String eventName = eventNameEditText.getText().toString();
-            String eventTime = eventTimeEditText.getText().toString();
-            String eventVenue = venueSpinner.getSelectedItem().toString();
-            String eventClub = clubSpinner.getSelectedItem().toString();
-            String eventDetails = eventDetailsEditText.getText().toString();
-            String classroomNumber = classroomNumberEditText.getText().toString();
+        MaterialButton saveButton = dialogView.findViewById(R.id.save_button);
+        saveButton.setOnClickListener(v -> saveEvent(eventNameInput, eventTimeInput, venueSpinner, clubSpinner,
+                eventDetailsInput, classroomNumberInput, dialog));
 
-            if (!eventName.isEmpty() && !eventVenue.isEmpty()) {
-                // If the venue is ClassRoom, ensure the classroom number is valid
-                if (eventVenue.equals("ClassRoom") && !classroomNumber.isEmpty()) {
-                    // Validate classroom number
-                    int classroomNum;
-                    try {
-                        classroomNum = Integer.parseInt(classroomNumber);
-                        if (classroomNum < 1 || classroomNum > 35) {
-                            Toast.makeText(getContext(), "Classroom number must be between 1 and 35", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    } catch (NumberFormatException e) {
-                        Toast.makeText(getContext(), "Invalid classroom number", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-                // Save time or placeholder if not selected
-                saveEventToFirebase(eventName, eventTime.isEmpty() ? "-" : eventTime, eventVenue, eventClub, eventDetails, classroomNumber, dialog);
-            } else {
-                Toast.makeText(getContext(), "Event name and venue are required", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Set the close button action
         closeButton.setOnClickListener(v -> dialog.dismiss());
+
+        setupVenueSpinnerListener(venueSpinner, classroomNumberLayout);
 
         dialog.show();
     }
+
+    private void setupSpinners(AutoCompleteTextView clubSpinner, AutoCompleteTextView venueSpinner) {
+        ArrayAdapter<CharSequence> clubAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.clubs_array, android.R.layout.simple_dropdown_item_1line);
+        clubSpinner.setAdapter(clubAdapter);
+
+        ArrayAdapter<CharSequence> venueAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.venue_array, android.R.layout.simple_dropdown_item_1line);
+        venueSpinner.setAdapter(venueAdapter);
+    }
+
+    private void setupTimePicker(TextInputEditText eventTimeInput) {
+        eventTimeInput.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            new TimePickerDialog(getContext(),
+                    (view, hourOfDay, minute) -> {
+                        String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
+                        eventTimeInput.setText(formattedTime);
+                    }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
+        });
+    }
+
+    private void setupVenueSpinnerListener(AutoCompleteTextView venueSpinner, TextInputLayout classroomNumberLayout) {
+        venueSpinner.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedVenue = (String) parent.getItemAtPosition(position);
+            classroomNumberLayout.setVisibility(selectedVenue.equals("ClassRoom") ? View.VISIBLE : View.GONE);
+        });
+    }
+
+    private void saveEvent(TextInputEditText eventNameInput, TextInputEditText eventTimeInput,
+                           AutoCompleteTextView venueSpinner, AutoCompleteTextView clubSpinner,
+                           TextInputEditText eventDetailsInput, TextInputEditText classroomNumberInput,
+                           AlertDialog dialog) {
+        String eventName = eventNameInput.getText().toString();
+        String eventTime = eventTimeInput.getText().toString();
+        String eventVenue = venueSpinner.getText().toString();
+        String eventClub = clubSpinner.getText().toString();
+        String eventDetails = eventDetailsInput.getText().toString();
+        String classroomNumber = classroomNumberInput.getText().toString();
+
+        if (validateInputs(eventName, eventVenue, eventVenue.equals("ClassRoom") ? classroomNumber : null)) {
+            saveEventToFirebase(eventName, eventTime.isEmpty() ? "-" : eventTime, eventVenue, eventClub, eventDetails, classroomNumber, dialog);
+        }
+    }
+
+    private boolean validateInputs(String eventName, String eventVenue, String classroomNumber) {
+        if (eventName.isEmpty() || eventVenue.isEmpty()) {
+            Toast.makeText(getContext(), "Event name and venue are required", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (eventVenue.equals("ClassRoom") && !classroomNumber.isEmpty()) {
+            try {
+                int classroomNum = Integer.parseInt(classroomNumber);
+                if (classroomNum < 1 || classroomNum > 35) {
+                    Toast.makeText(getContext(), "Classroom number must be between 1 and 35", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(getContext(), "Invalid classroom number", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     // Save event to Firebase under the selected date
     private void saveEventToFirebase(String name, String time, String venue, String club, String details, String classroomNumber, AlertDialog dialog) {
