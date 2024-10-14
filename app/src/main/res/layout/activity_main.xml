@@ -4,134 +4,233 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
-    android:backgroundTint="@color/backgroundcolor"
+    android:background="?attr/colorSurface"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <!-- Main content of the activity -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
-        android:background="@color/backgroundcolor"
+        android:background="?attr/colorSurface"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
         <!-- Toolbar -->
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="0dp"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:background="@color/backgroundcolor"
-            android:elevation="8dp"
-            android:paddingStart="16dp"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorSurface"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="start|center_vertical"
-                android:orientation="horizontal"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="7dp">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:elevation="4dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight">
 
-                <!-- Logo on the left -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|center_vertical"
+                    android:orientation="horizontal">
 
-                <!-- Title next to the logo -->
-                <ImageView
-                    android:id="@+id/toolbar_logo"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center_vertical"
-                    android:contentDescription="App Logo"
-                    android:src="@drawable/logo" />
+                    <ImageView
+                        android:id="@+id/toolbar_logo"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:contentDescription="App Logo"
+                        android:src="@drawable/logo" />
 
-                <TextView
-                    android:id="@+id/toolbar_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="31dp"
-                    android:layout_gravity="bottom"
-                    android:fontFamily="@font/aclonica"
-                    android:paddingStart="8dp"
-                    android:text="UniCalendar"
-                    android:textColor="@color/fontcolor"
-                    android:textSize="20sp" />
-            </LinearLayout>
-        </androidx.appcompat.widget.Toolbar>
+                    <TextView
+                        android:id="@+id/toolbar_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:fontFamily="@font/aclonica"
+                        android:paddingStart="12dp"
+                        android:text="UniCalendar"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="22sp" />
+                </LinearLayout>
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
 
-        <!-- Fragment Container (Upper Half for Calendar Fragment) -->
-        <FrameLayout
+        <!-- Fragment Containers -->
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/fragment_container_upper"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:elevation="4dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
             app:layout_constraintBottom_toTopOf="@id/fragment_container_lower"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+            app:layout_constraintHeight_percent="0.4" />
 
-
-        <!-- Fragment Container (Lower Half for Event List Fragment) -->
-        <FrameLayout
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/fragment_container_lower"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="16dp"
-            android:elevation="4dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/fragment_container_upper" />
 
-<!--        <Button-->
-<!--            android:id="@+id/test_firebase_button"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="test_firebase_button"-->
-<!--            app:layout_constraintBottom_toTopOf="@+id/fragment_container_lower"-->
-<!--            app:layout_constraintTop_toTopOf="@+id/fragment_container_upper"-->
-<!--            tools:layout_editor_absoluteX="148dp" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Profile Menu (Drawer) -->
-    <LinearLayout
+    <com.google.android.material.navigation.NavigationView
         android:id="@+id/profile_menu"
-        android:layout_width="300dp"
+        android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:orientation="vertical"
-        android:background="@drawable/rounded_background"
-        android:backgroundTint="@color/backgroundcolor"
-    android:padding="16dp">
+        android:background="?attr/colorSurface"
+        android:fitsSystemWindows="true">
 
-        <!-- Profile Menu Content -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Profile"
-            android:textColor="@color/fontcolor"
-            android:textSize="24sp"
-            android:textStyle="bold"
-        android:layout_marginBottom="24dp" />
-        <TextView
-            android:id="@+id/user_email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="User Email"
-            android:textColor="@color/fontcolor"
-            android:textSize="18sp"
-            android:layout_marginBottom="32dp" />
-        <!-- Add logout and other options here -->
-        <Button
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Profile Section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Profile"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/user_email"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="User Email"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Event Indicators Section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Event Indicators"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Exam Indicator -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <View
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/circle_shape"
+                        android:backgroundTint="@color/exam" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Exam"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp"
+                        android:layout_marginStart="12dp" />
+                </LinearLayout>
+
+                <!-- Holiday Indicator -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <View
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/circle_shape"
+                        android:backgroundTint="@color/holiday" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Holiday"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp"
+                        android:layout_marginStart="12dp" />
+                </LinearLayout>
+
+                <!-- Other Events Indicator -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <View
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/circle_shape"
+                        android:backgroundTint="@color/other" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Other Events &amp; Important Dates"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp"
+                        android:layout_marginStart="12dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- Logout Button -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/logout_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_margin="16dp"
+            android:text="Logout"
             android:backgroundTint="@color/fontcolor"
             android:textColor="@color/backgroundcolor"
-            android:text="Logout" />
-    </LinearLayout>
+            app:cornerRadius="8dp" />
 
+    </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>

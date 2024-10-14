@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/previous_month"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:text="&lt;"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:textColor="@color/fontcolor" />
+
+    <TextView
+        android:id="@+id/month_year"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textColor="@color/fontcolor"
+        android:textStyle="bold"
+        android:background="?attr/selectableItemBackground"
+        android:padding="8dp" />
+
+    <TextView
+        android:id="@+id/next_month"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:text="&gt;"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:textColor="@color/fontcolor" />
+</LinearLayout>

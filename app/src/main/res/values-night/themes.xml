@@ -13,7 +13,7 @@
         <!-- Status bar color -->
         <item name="android:statusBarColor">@color/backgroundcolor</item>
         <!-- Background color -->
-        <item name="android:windowBackground">@color/backgroundcolor</item>
+        <item name="android:windowBackground">@color/fontcolor</item>
         <!-- Text color -->
         <item name="android:textColor">@color/fontcolor</item>
 

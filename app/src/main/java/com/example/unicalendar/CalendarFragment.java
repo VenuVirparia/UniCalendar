@@ -11,19 +11,26 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ArrayAdapter;
 import android.app.TimePickerDialog;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import org.threeten.bp.format.DateTimeFormatter; // Correct import for ThreeTenABP
+import org.threeten.bp.LocalDate; // Ensure you're using ThreeTen's LocalDate
+import org.threeten.bp.temporal.TemporalAccessor;
+import org.w3c.dom.Text;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,18 +52,23 @@ public class CalendarFragment extends Fragment {
 
     private String selectedDate;
     private DatabaseReference databaseReference;
+    MaterialCalendarView materialCalendarView;
+    private View customHeaderView;
+    private TextView monthYearText;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
-        MaterialCalendarView materialCalendarView = view.findViewById(R.id.calendarView);
+        materialCalendarView = view.findViewById(R.id.calendarView);
         FloatingActionButton fab = view.findViewById(R.id.fab_admin);
         materialCalendarView.addDecorator(new TodayDecorator(getContext()));
+        customHeaderView = view.findViewById(R.id.custom_header);
 
         // Initialize Firebase database reference
         databaseReference = FirebaseDatabase.getInstance().getReference("events");
 
+        setupCustomHeader();
         // Get current logged-in user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -86,22 +98,7 @@ public class CalendarFragment extends Fragment {
                 ((MainActivity) getActivity()).updateEventList(formattedDate);
             }
         });
-        // Set the default date to today
-//        Calendar calendar = Calendar.getInstance();
-//        selectedDate = calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR);
-//
-//        // Set today's date in the calendar view
-//        calendarView.setDate(calendar.getTimeInMillis(), true, true);
-//
-//        calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
-//            selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
-//            String formattedDate = selectedDate.replace("/", "-"); // Convert date format for Firebase key
-//
-//            // Update the event list for the selected date
-//            if (getActivity() instanceof MainActivity) {
-//                ((MainActivity) getActivity()).updateEventList(formattedDate);
-//            }
-//        });
+
 
         // Handle admin FAB click for adding events
         fab.setOnClickListener(v -> openEventDialog(selectedDate));
@@ -309,36 +306,6 @@ public class CalendarFragment extends Fragment {
         loadAndHighlightEvents(calendarView);
     }
 
-//        // Prepare data to be saved
-//        Map<String, Object> eventData = new HashMap<>();
-//        eventData.put("name", name);
-//        eventData.put("time", time);
-//        eventData.put("venue", venue);
-//        eventData.put("club", club);
-//        eventData.put("details", details);
-//
-//        // If the venue is a classroom, add the classroom number
-//        if (venue.equals("ClassRoom")) {
-//            eventData.put("classroomNumber", classroomNumber);
-//        }
-//
-//        // Save event data to Firebase under the selected date
-//        eventRef.setValue(eventData).addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                // If saving is successful, dismiss dialog and show a success message
-//                dialog.dismiss();
-//                Toast.makeText(getContext(), "Event added successfully!", Toast.LENGTH_SHORT).show();
-//                // Update the event list immediately after saving
-//                if (getActivity() instanceof MainActivity) {
-//                    ((MainActivity) getActivity()).updateEventList(formattedDate);
-//                }
-//            } else {
-//                // If saving fails, show an error message
-//                Toast.makeText(getContext(), "Failed to save event. Try again.", Toast.LENGTH_SHORT).show();
-//                Log.e("FirebaseError", "Error saving event: " + task.getException().getMessage());
-//            }
-//        });
-//    }
 
     private void loadAndHighlightEvents(MaterialCalendarView calendarView) {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -387,4 +354,38 @@ public class CalendarFragment extends Fragment {
             }
         });
     }
+
+    private void setupCustomHeader() {
+        monthYearText = customHeaderView.findViewById(R.id.month_year);
+        TextView previousButton = customHeaderView.findViewById(R.id.previous_month);
+        TextView nextButton = customHeaderView.findViewById(R.id.next_month);
+
+        materialCalendarView.setTopbarVisible(false);
+
+        updateHeaderText(materialCalendarView.getCurrentDate());
+
+        previousButton.setOnClickListener(v -> materialCalendarView.goToPrevious());
+        nextButton.setOnClickListener(v -> materialCalendarView.goToNext());
+        monthYearText.setOnClickListener(v -> showMonthYearPicker());
+
+        materialCalendarView.setOnMonthChangedListener((widget, date) -> updateHeaderText(date));
+    }
+
+    private void updateHeaderText(CalendarDay date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault());
+        String formattedDate = date.getDate().format(formatter);
+        monthYearText.setText(formattedDate);
+    }
+
+    private void showMonthYearPicker() {
+        CalendarDay currentDate = materialCalendarView.getCurrentDate();
+        int year = currentDate.getYear();
+        int month = currentDate.getMonth() - 1; // MonthYearPickerDialog uses 0-based months
+
+        MonthYearPickerDialog monthYearPickerDialog = MonthYearPickerDialog.newInstance(month, year);
+        monthYearPickerDialog.setListener((view, year1, month1, dayOfMonth) ->
+                materialCalendarView.setCurrentDate(CalendarDay.from(year1, month1 + 1, 1)));
+        monthYearPickerDialog.show(getParentFragmentManager(), "MonthYearPickerDialog");
+    }
 }
+

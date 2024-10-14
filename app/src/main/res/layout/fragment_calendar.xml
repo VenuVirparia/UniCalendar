@@ -4,13 +4,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <include
+        android:id="@+id/custom_header"
+        layout="@layout/custom_calendar_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/custom_header"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:mcv_selectionColor="@color/select"
@@ -18,17 +25,23 @@
         app:mcv_dateTextAppearance="@style/CalendarDateTextAppearance"
         app:mcv_headerTextAppearance="@style/CalendarHeaderTextAppearance"
         app:mcv_calendarMode="month"
-        app:mcv_tileHeight="48dp"/>
+        app:mcv_tileHeight="48dp"
+        />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_admin"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_margin="0dp"
-        android:visibility="gone"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="6dp"
+        app:fabCustomSize="40dp"
+        app:fabSize="mini"
         app:layout_constraintBaseline_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/roundFab"
-        app:srcCompat="@drawable/ic_add_event" />
+        app:srcCompat="@drawable/ic_add_event"
+       android:backgroundTint="#C8A029"
+       android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
