@@ -51,9 +51,6 @@ public class ClubEventDecorator implements DayViewDecorator {
                 // No events, don't draw anything
                 return;
             }
-            if (eventTypes.size() > 1) {
-                color = ContextCompat.getColor(context, R.color.more);
-            } else {
                 String eventType = eventTypes.get(0);
                 switch (eventType) {
                     case "External Exam":
@@ -63,13 +60,9 @@ public class ClubEventDecorator implements DayViewDecorator {
                     case "Holiday":
                         color = ContextCompat.getColor(context, R.color.holiday);
                         break;
-                    case "University":
-                        color = ContextCompat.getColor(context, R.color.university);
-                        break;
                     default:
                         color = ContextCompat.getColor(context, R.color.other);
                 }
-            }
 
             int radius = (right - left) / 3;
             int centerX = (right + left) / 2;

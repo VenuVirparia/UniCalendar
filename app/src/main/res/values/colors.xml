@@ -3,11 +3,11 @@
     <color name="fontcolor">#181B1B</color>
     <color name="backgroundcolor">#EBEBEA</color>
     <color name="todaysDate">#181B1B</color>
+
     <color name="exam">#C65699</color>
-    <color name="university">#B1B335</color>
     <color name="other">#81BB79</color>
-    <color name="holiday">#4D8BA0</color>
-    <color name="more">#FF9800</color>
+    <color name="holiday">#5DA5BD</color>
+
     <color name="link">#2571CC</color>
     <color name="lift">#3C3C3C</color>
     <color name="select">#7A7979</color>

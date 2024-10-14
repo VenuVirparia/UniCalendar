@@ -3,7 +3,7 @@
     <style name="Base.Theme.UniCalendar" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
-        <item name="colorPrimary">@color/university</item>
+
         <item name="colorPrimaryVariant">@color/exam</item>
         <item name="colorOnPrimary">@color/fontcolor</item>
         <!-- Secondary brand color -->
@@ -11,7 +11,7 @@
         <item name="colorSecondaryVariant">@color/holiday</item>
         <item name="colorOnSecondary">@color/fontcolor</item>
         <!-- Status bar color -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/backgroundcolor</item>
         <!-- Background color -->
         <item name="android:windowBackground">@color/backgroundcolor</item>
         <!-- Text color -->
