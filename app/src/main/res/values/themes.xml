@@ -18,6 +18,13 @@
         <item name="android:textColor">@color/fontcolor</item>
 
     </style>
+    <style name="CalendarDateTextAppearance" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/fontcolor</item> <!-- Black text color in light mode -->
+    </style>
+
+    <style name="CalendarHeaderTextAppearance" parent="TextAppearance.AppCompat.Subhead">
+        <item name="android:textColor">@color/fontcolor</item> <!-- Black header text color in light mode -->
+    </style>
     <style name="Theme.UniCalendar.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here -->
         <item name="android:windowNoTitle">true</item>

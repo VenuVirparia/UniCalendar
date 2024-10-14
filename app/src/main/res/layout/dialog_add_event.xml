@@ -5,11 +5,13 @@
     android:padding="16dp"
     android:background="@drawable/dialog_background"
     android:elevation="4dp"
+    android:backgroundTint="@color/backgroundcolor"
     android:layout_margin="16dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/backgroundcolor"
         android:layout_marginBottom="25dp">
 
         <TextView
@@ -19,6 +21,7 @@
             android:layout_centerVertical="true"
             android:fontFamily="@font/alice"
             android:text="Add Event on "
+            android:textColor="@color/fontcolor"
             android:textSize="20dp" />
 
         <ImageView
@@ -38,6 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        android:textColor="@color/fontcolor"
         android:hint="Event Name"
         android:padding="12dp" />
     <!-- android:background="@drawable/edittext_background" -->
@@ -47,6 +51,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:outlineSpotShadowColor="@color/fontcolor"
+        android:outlineAmbientShadowColor="@color/fontcolor"
         android:layout_marginBottom="10dp" />
         <!--android:background="@drawable/spinner_background"-->
 
@@ -57,6 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="10dp"
+        android:textColor="@color/fontcolor"
         android:hint="Event Time"
         android:padding="12dp"
         android:text="Select Time" />
@@ -77,6 +84,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Classroom Number (1-35)"
+        android:textColor="@color/fontcolor"
         android:visibility="gone"
         android:padding="12dp"
         android:layout_marginTop="8dp"/>
@@ -87,6 +95,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:textColor="@color/fontcolor"
         android:layout_marginBottom="10dp"
         android:hint="Event Details"
         android:padding="12dp" />
@@ -99,8 +108,8 @@
         android:layout_height="wrap_content"
         android:text="Save"
         android:layout_marginTop="16dp"
-        android:backgroundTint="@color/backgroundcolor"
-        android:textColor="@color/fontcolor"/>
+        android:backgroundTint="@color/fontcolor"
+        android:textColor="@color/backgroundcolor"/>
 
 
 </LinearLayout>

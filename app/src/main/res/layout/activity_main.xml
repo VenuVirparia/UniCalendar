@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
+    android:backgroundTint="@color/backgroundcolor"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -66,7 +67,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:background="@drawable/rounded_background"
             android:elevation="4dp"
             app:layout_constraintBottom_toTopOf="@id/fragment_container_lower"
             app:layout_constraintEnd_toEndOf="parent"
@@ -80,7 +80,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="16dp"
-            android:background="@drawable/rounded_background"
             android:elevation="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -105,6 +104,7 @@
         android:layout_gravity="end"
         android:orientation="vertical"
         android:background="@drawable/rounded_background"
+        android:backgroundTint="@color/backgroundcolor"
     android:padding="16dp">
 
         <!-- Profile Menu Content -->
@@ -129,8 +129,8 @@
             android:id="@+id/logout_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/backgroundcolor"
-            android:textColor="@color/fontcolor"
+            android:backgroundTint="@color/fontcolor"
+            android:textColor="@color/backgroundcolor"
             android:text="Logout" />
     </LinearLayout>
 
