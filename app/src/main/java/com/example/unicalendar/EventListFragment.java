@@ -210,9 +210,11 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
             eventTimeTextView.setVisibility(View.GONE);
             venueSpinner.setVisibility(View.GONE);
             classroomNumberLayout.setVisibility(View.GONE);
+            venueLayout.setVisibility(View.GONE);
         } else {
             eventTimeTextView.setVisibility(View.VISIBLE);
             venueSpinner.setVisibility(View.VISIBLE);
+            venueLayout.setVisibility(View.VISIBLE);
             if ("ClassRoom".equals(event.getVenue())) {
                 classroomNumberLayout.setVisibility(View.VISIBLE);
             } else {

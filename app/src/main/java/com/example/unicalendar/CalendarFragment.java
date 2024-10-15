@@ -97,6 +97,8 @@ public class CalendarFragment extends Fragment {
         ImageView closeButton = dialogView.findViewById(R.id.close_button);
         TextInputLayout classroomNumberLayout = dialogView.findViewById(R.id.classroom_number_layout);
         TextInputEditText classroomNumberInput = dialogView.findViewById(R.id.event_classroom_number);
+        TextInputLayout venueLayout = dialogView.findViewById(R.id.venue_layout);
+
 
         TextView dialogTitle = dialogView.findViewById(R.id.dialog_title);
         dialogTitle.setText(String.format("Add Event on %s", date));
@@ -121,9 +123,11 @@ public class CalendarFragment extends Fragment {
                 eventTimeInput.setVisibility(View.GONE);
                 venueSpinner.setVisibility(View.GONE);
                 classroomNumberLayout.setVisibility(View.GONE);
+                venueLayout.setVisibility(View.GONE);
             } else {
                 eventTimeInput.setVisibility(View.VISIBLE);
                 venueSpinner.setVisibility(View.VISIBLE);
+                venueLayout.setVisibility(View.VISIBLE);
                 // ClassRoom visibility is handled in setupVenueSpinnerListener
             }
         });
