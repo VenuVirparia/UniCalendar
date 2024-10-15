@@ -303,20 +303,18 @@ public class CalendarFragment extends Fragment {
                                     }
                                 }
 
-                                calendarView.addDecorator(new EventDecorator(getContext(), eventDay, eventType));
-                            } catch (NumberFormatException e) {
+                                if (getContext() != null) {
+                                    EventDecorator decorator = new EventDecorator(getContext(), eventDay, eventType);
+                                    calendarView.addDecorator(decorator);
+                                } else {
+                                    Log.e("CalendarFragment", "Context is null when creating EventDecorator");
+                                }                            } catch (NumberFormatException e) {
                                 Log.e("CalendarFragment", "Invalid date format: " + dateKey);
                             }
                         }
                     }
                     }
                 }
-
-//                // Apply decorators for each day with events
-//                for (DayEvents dayEvents : eventsByDate.values()) {
-//                    if (!dayEvents.getClubs().isEmpty()) {
-//                        calendarView.addDecorator(new EventDecorator(getContext(), dayEvents));
-//                    }                }
 
 
             @Override
