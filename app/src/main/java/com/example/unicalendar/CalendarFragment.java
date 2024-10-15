@@ -114,6 +114,20 @@ public class CalendarFragment extends Fragment {
 
         setupVenueSpinnerListener(venueSpinner, classroomNumberLayout);
 
+        // Add listener for club spinner to handle Holiday events
+        clubSpinner.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedClub = (String) parent.getItemAtPosition(position);
+            if ("Holiday".equals(selectedClub)) {
+                eventTimeInput.setVisibility(View.GONE);
+                venueSpinner.setVisibility(View.GONE);
+                classroomNumberLayout.setVisibility(View.GONE);
+            } else {
+                eventTimeInput.setVisibility(View.VISIBLE);
+                venueSpinner.setVisibility(View.VISIBLE);
+                // ClassRoom visibility is handled in setupVenueSpinnerListener
+            }
+        });
+
         dialog.show();
     }
 
@@ -156,16 +170,26 @@ public class CalendarFragment extends Fragment {
         String eventDetails = eventDetailsInput.getText().toString();
         String classroomNumber = classroomNumberInput.getText().toString();
 
-        if (validateInputs(eventName, eventVenue, eventVenue.equals("ClassRoom") ? classroomNumber : null)) {
-            saveEventToFirebase(eventName, eventTime.isEmpty() ? "-" : eventTime, eventVenue, eventClub, eventDetails, classroomNumber, dialog);
+        if (validateInputs(eventName, eventVenue, classroomNumber, eventClub, eventDetails)) {
+            saveEventToFirebase(eventName, eventTime.isEmpty() ? "-" : eventTime,
+                    eventVenue.isEmpty() ? "-" : eventVenue,
+                    eventClub, eventDetails,
+                    classroomNumber.isEmpty() ? "-" : classroomNumber,
+                    dialog);
         }
     }
 
-    private boolean validateInputs(String eventName, String eventVenue, String classroomNumber) {
-        if (eventName.isEmpty() || eventVenue.isEmpty()) {
-            Toast.makeText(getContext(), "Event name and venue are required", Toast.LENGTH_SHORT).show();
+    private boolean validateInputs(String eventName, String eventVenue, String classroomNumber, String eventClub, String eventDetails) {
+        if (eventName.isEmpty()) {
+            Toast.makeText(getContext(), "Event name is required", Toast.LENGTH_SHORT).show();
             return false;
         }
+
+        if (!"Holiday".equals(eventClub) && eventDetails.isEmpty()) {
+            Toast.makeText(getContext(), "Event details are required for non-holiday events", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         if (eventVenue.equals("ClassRoom") && !classroomNumber.isEmpty()) {
             try {
                 int classroomNum = Integer.parseInt(classroomNumber);
@@ -180,7 +204,6 @@ public class CalendarFragment extends Fragment {
         }
         return true;
     }
-
 
     // Save event to Firebase under the selected date
     private void saveEventToFirebase(String name, String time, String venue, String club, String details, String classroomNumber, AlertDialog dialog) {

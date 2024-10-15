@@ -8,7 +8,11 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string-array name="clubs_array">
+
+        <item>Internal Exam</item>
+        <item>External Exam</item>
         <item>University</item>
+        <item>Holiday</item>
         <item>Sports Club</item>
         <item>Samvaad</item>
         <item>IETE</item>
@@ -17,18 +21,17 @@
         <item>Shutterbugs</item>
         <item>Readers Community</item>
         <item>Decibel</item>
-        <item>Holiday</item>
-        <item>Internal Exam</item>
-        <item>External Exam</item>
+
     </string-array>
 
     <string-array name="venue_array">
+        <item>-</item>
         <item>MMH</item>
         <item>Seminar Hall</item>
         <item>Medical Sports Ground</item>
         <item>Open Canteen</item>
         <item>Center Foyer</item>
         <item>ClassRoom</item>
-        <item>-</item>
+
     </string-array>
 </resources>

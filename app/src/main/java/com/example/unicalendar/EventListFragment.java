@@ -94,18 +94,49 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
             TextView eventDetails = dialogView.findViewById(R.id.event_details);
             TextView eventClub = dialogView.findViewById(R.id.event_club);
             TextView eventClassroom = dialogView.findViewById(R.id.event_classroom);
+            ImageView time = dialogView.findViewById(R.id.timelogo);
+            ImageView location = dialogView.findViewById(R.id.locationlogo);
+
 
             eventName.setText(event.getName());
-            eventTime.setText("Time: " + event.getTime());
-            eventVenue.setText("Venue: " + event.getVenue());
-            eventDetails.setText("Details: " + event.getDetails());
-            eventClub.setText("Club: " + event.getClub());
+            eventClub.setText("" + event.getClub());
 
-            if (event.getVenue() != null && event.getVenue().toLowerCase().contains("classroom") && event.getClassroomNumber() != null) {
+            if (event.getTime() != null && !event.getTime().isEmpty() && !"-".equals(event.getTime())) {
+                eventTime.setText(": " + event.getTime());
+                eventTime.setVisibility(View.VISIBLE);
+            } else {
+                eventTime.setVisibility(View.GONE);
+                time.setVisibility(View.GONE);
+            }
+
+            if (event.getVenue() != null && !event.getVenue().isEmpty() && !"-".equals(event.getVenue())) {
+                eventVenue.setText(": " + event.getVenue());
+                eventVenue.setVisibility(View.VISIBLE);
+            } else {
+                eventVenue.setVisibility(View.GONE);
+                location.setVisibility(View.GONE);
+            }
+
+            if (event.getDetails() != null && !event.getDetails().isEmpty()) {
+                eventDetails.setText("Details: " + event.getDetails());
+                eventDetails.setVisibility(View.VISIBLE);
+            } else {
+                eventDetails.setVisibility(View.GONE);
+            }
+
+            if (event.getVenue() != null && event.getVenue().toLowerCase().contains("classroom") &&
+                    event.getClassroomNumber() != null && !"-".equals(event.getClassroomNumber())) {
                 eventClassroom.setVisibility(View.VISIBLE);
                 eventClassroom.setText("Classroom Number: " + event.getClassroomNumber());
             } else {
                 eventClassroom.setVisibility(View.GONE);
+            }
+            if ("Holiday".equals(event.getClub())) {
+                eventTime.setVisibility(View.GONE);
+                eventVenue.setVisibility(View.GONE);
+                location.setVisibility(View.GONE);
+                time.setVisibility(View.GONE);
+
             }
 
             builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
@@ -152,6 +183,9 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
         TextInputEditText eventDetailsEditText = dialogView.findViewById(R.id.event_details);
         TextInputEditText classroomNumberEditText = dialogView.findViewById(R.id.event_classroom_number);
         TextInputLayout classroomNumberLayout = dialogView.findViewById(R.id.classroom_number_layout);
+        TextInputLayout venueLayout = dialogView.findViewById(R.id.venue_layout);
+        TextInputLayout clublayout = dialogView.findViewById(R.id.club_layout);
+
 
         // Set up the AutoCompleteTextView for clubs
         ArrayAdapter<CharSequence> clubAdapter = ArrayAdapter.createFromResource(getContext(),
@@ -170,28 +204,63 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
         venueSpinner.setText(event.getVenue(), false);
         eventDetailsEditText.setText(event.getDetails());
         classroomNumberEditText.setText(event.getClassroomNumber());
-        if ("ClassRoom".equals(event.getVenue())) {
-            classroomNumberLayout.setVisibility(View.VISIBLE);
-            classroomNumberEditText.setText(event.getClassroomNumber());
-        } else {
+
+
+        if ("Holiday".equals(event.getClub())) {
+            eventTimeTextView.setVisibility(View.GONE);
+            venueSpinner.setVisibility(View.GONE);
             classroomNumberLayout.setVisibility(View.GONE);
+        } else {
+            eventTimeTextView.setVisibility(View.VISIBLE);
+            venueSpinner.setVisibility(View.VISIBLE);
+            if ("ClassRoom".equals(event.getVenue())) {
+                classroomNumberLayout.setVisibility(View.VISIBLE);
+            } else {
+                classroomNumberLayout.setVisibility(View.GONE);
+            }
         }
+// Handle visibility based on club selection
+        clubSpinner.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedClub = parent.getItemAtPosition(position).toString();
+            boolean isHoliday = "Holiday".equals(selectedClub);
+            eventTimeTextView.setVisibility(isHoliday ? View.GONE : View.VISIBLE);
+            venueLayout.setVisibility(isHoliday ? View.GONE : View.VISIBLE);
+            venueSpinner.setVisibility(isHoliday ? View.GONE : View.VISIBLE);
+            if ("ClassRoom".equals(event.getVenue())) {
+                classroomNumberLayout.setVisibility(View.VISIBLE);
+            } else {
+                classroomNumberLayout.setVisibility(View.GONE);
+            }        });
 
 
         // Time picker
         eventTimeTextView.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            new TimePickerDialog(getContext(), (view, hourOfDay, minute) -> {
-                String time = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
-                eventTimeTextView.setText(time);
-            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
+
+                Calendar calendar = Calendar.getInstance();
+                new TimePickerDialog(getContext(), (view, hourOfDay, minute) -> {
+                    String time = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
+                    eventTimeTextView.setText(time);
+                }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
+
         });
 
         AlertDialog dialog = builder.create();
         // Add a custom "Save" button to the dialog
         Button saveButton = dialogView.findViewById(R.id.save_button);
         saveButton.setOnClickListener(v -> {
+            String eventName = eventNameEditText.getText().toString();
+            String eventClub = clubSpinner.getText().toString();
+            String eventDetails = eventDetailsEditText.getText().toString();
 
+            if (eventName.isEmpty()) {
+                Toast.makeText(getContext(), "Event name is required", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!"Holiday".equals(eventClub) && eventDetails.isEmpty()) {
+                Toast.makeText(getContext(), "Event details are required for non-holiday events", Toast.LENGTH_SHORT).show();
+                return;
+            }
             event.setName(eventNameEditText.getText().toString());
             event.setTime(eventTimeTextView.getText().toString());
             event.setVenue(venueSpinner.getText().toString());
