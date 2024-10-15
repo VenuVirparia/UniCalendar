@@ -1,19 +1,15 @@
 package com.example.unicalendar;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
@@ -29,8 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ValueEventListener;
 import com.jakewharton.threetenabp.AndroidThreeTen;
-
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,17 +33,15 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     private DatabaseReference databaseReference;
-    DrawerLayout drawerLayout;
-    ActionBarDrawerToggle toggle;
-    // Set the same size for ic_profile as the logo
-
-
-
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Initialize Firebase and ThreeTen library
         FirebaseApp.initializeApp(this);
         AndroidThreeTen.init(this);
 
@@ -59,90 +51,87 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);  // Disable the home button (hamburger menu)
 
-
-//        Button testButton = findViewById(R.id.test_firebase_button);
-//
-//        testButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Pass MainActivity.this instead of "this"
-//                firebaseDatabaseTester tester = new firebaseDatabaseTester(MainActivity.this);
-//                tester.testDatabaseWrite(); // Optional: to close MainActivity
-//            }
-//        });
+        // Initialize drawer layout
         drawerLayout = findViewById(R.id.drawer_layout);
 
-
-        Button logout_button = findViewById(R.id.logout_button);
-        if (logout_button != null) {
-            logout_button.setOnClickListener(new View.OnClickListener() {
+        // Set up logout button and its click listener
+        Button logoutButton = findViewById(R.id.logout_button);
+        if (logoutButton != null) {
+            logoutButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FirebaseAuth.getInstance().signOut();  // Add sign-out logic
-                    startActivity(new Intent(MainActivity.this, login.class));
-                    finish(); // Optional: to close MainActivity
+                    FirebaseAuth.getInstance().signOut();  // Log out from Firebase
+                    startActivity(new Intent(MainActivity.this, login.class));  // Redirect to login
+                    finish();  // Close MainActivity
                 }
             });
         }
 
-            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-            TextView userEmailTextView = findViewById(R.id.user_email);  // Add this line
-            if (currentUser != null) {
-                String userEmail = currentUser.getEmail();
-                userEmailTextView.setText(userEmail);  // Display user's email
-            }
-            // Initialize Firebase Database reference
-            databaseReference = FirebaseDatabase.getInstance().getReference("events");
+        // Display the logged-in user's email in the drawer
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        TextView userEmailTextView = findViewById(R.id.user_email);
+        if (currentUser != null) {
+            String userEmail = currentUser.getEmail();
+            userEmailTextView.setText(userEmail);  // Display user's email
+        }
 
-            // Set up fragments
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container_upper, new CalendarFragment(),"calendar_fragment")
-                    .replace(R.id.fragment_container_lower, new EventListFragment())
-                    .commit();
+        // Initialize Firebase Database reference for events
+        databaseReference = FirebaseDatabase.getInstance().getReference("events");
 
-        // Set default date to today in "dd-MM-yyyy" format
+        // Set up fragments: CalendarFragment in the upper part, EventListFragment in the lower part
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_upper, new CalendarFragment(), "calendar_fragment")
+                .replace(R.id.fragment_container_lower, new EventListFragment())
+                .commit();
+
+        // Set default date to today in "dd-MM-yyyy" format and update event list
         String today = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
         updateEventList(today);
-        }
+    }
 
     // Inflate the menu with the profile icon
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        // Set up profile icon size
         MenuItem profileMenuItem = menu.findItem(R.id.action_profile);
         if (profileMenuItem != null) {
             ImageView profileIcon = (ImageView) profileMenuItem.getActionView();
             if (profileIcon != null) {
                 profileIcon.getLayoutParams().width = 50;  // Set width
                 profileIcon.getLayoutParams().height = 50; // Set height
-                profileIcon.requestLayout(); // Request layout update
+                profileIcon.requestLayout();  // Request layout update
             }
         }
         return true;
     }
 
-    public CalendarFragment getCalendarFragment() {
-        return (CalendarFragment) getSupportFragmentManager().findFragmentByTag("calendar_fragment");
-    }
-
-
+    // Handle profile menu item click to open the drawer
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_profile) {
-            drawerLayout.openDrawer(GravityCompat.END); // Open the drawer from the right
+            drawerLayout.openDrawer(GravityCompat.END);  // Open drawer from the right
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    // Get the CalendarFragment by its tag
+    public CalendarFragment getCalendarFragment() {
+        return (CalendarFragment) getSupportFragmentManager().findFragmentByTag("calendar_fragment");
+    }
+
+    // Update the event list for the selected date from Firebase
     public void updateEventList(String selectedDate) {
         databaseReference.child(selectedDate).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<Event> events = new ArrayList<>();
                 for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
-                    String eventId = eventSnapshot.getKey();  // Capture the Firebase event ID
+                    // Retrieve event details from Firebase
+                    String eventId = eventSnapshot.getKey();
                     String eventName = eventSnapshot.child("name").getValue(String.class);
                     String eventTime = eventSnapshot.child("time").getValue(String.class);
                     String eventVenue = eventSnapshot.child("venue").getValue(String.class);
@@ -150,17 +139,15 @@ public class MainActivity extends AppCompatActivity {
                     String eventClub = eventSnapshot.child("club").getValue(String.class);
                     String classroomNumber = eventSnapshot.child("classroomNumber").getValue(String.class);
 
+                    // Create an Event object if eventName is not null
                     if (eventName != null) {
-                        // Pass the eventId to the Event constructor
                         Event event = new Event(eventId, selectedDate, eventName, eventTime, eventVenue, eventClub, eventDetails, classroomNumber);
                         events.add(event);
                     }
                 }
 
-                // Find the EventListFragment and update he event list
-                EventListFragment eventListFragment = (EventListFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment_container_lower);
-
+                // Update the event list in EventListFragment
+                EventListFragment eventListFragment = (EventListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container_lower);
                 if (eventListFragment != null) {
                     eventListFragment.updateEventList(events, selectedDate);
                 }
@@ -173,5 +160,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 }

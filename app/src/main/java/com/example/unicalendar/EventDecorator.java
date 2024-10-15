@@ -1,17 +1,11 @@
 package com.example.unicalendar;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.text.style.LineBackgroundSpan;
 import androidx.core.content.ContextCompat;
-
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.spans.DotSpan;
-
-import java.util.List;
 
 public class EventDecorator implements DayViewDecorator {
 

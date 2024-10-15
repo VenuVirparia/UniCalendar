@@ -17,12 +17,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     private ArrayList<Event> eventList;
     private OnEventClickListener listener;
-    //private String selectedDate;
 
     public EventAdapter(ArrayList<Event> eventList, OnEventClickListener listener) {
         this.eventList = eventList;
         this.listener = listener;
-        //this.selectedDate=selectedDate;
     }
 
 

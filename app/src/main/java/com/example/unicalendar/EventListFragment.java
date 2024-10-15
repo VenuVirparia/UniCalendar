@@ -1,5 +1,3 @@
-
-
 package com.example.unicalendar;
 
 import android.app.AlertDialog;
@@ -11,21 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DatabaseReference;
@@ -185,9 +176,7 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
         } else {
             classroomNumberLayout.setVisibility(View.GONE);
         }
-        // Populate spinners (you'll need to implement these methods)
-//        populateVenueSpinner(venueSpinner, event.getVenue());
-//        populateClubSpinner(clubSpinner, event.getClub());
+
 
         // Time picker
         eventTimeTextView.setOnClickListener(v -> {
@@ -209,9 +198,6 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
             event.setClub(clubSpinner.getText().toString());
             event.setDetails(eventDetailsEditText.getText().toString());
             event.setClassroomNumber(classroomNumberEditText.getText().toString());
-//
-
-
 
         // Update in Firebase
             if (getActivity() instanceof MainActivity) {
@@ -242,27 +228,4 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
                 .show();
     }
 
-
-
-    private void populateVenueSpinner(Spinner spinner, String currentVenue) {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.venue_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        if (currentVenue != null) {
-            int position = adapter.getPosition(currentVenue);
-            spinner.setSelection(position);
-        }
-    }
-
-    private void populateClubSpinner(Spinner spinner, String currentClub) {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.clubs_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        if (currentClub != null) {
-            int position = adapter.getPosition(currentClub);
-            spinner.setSelection(position);
-        }
-    }
 }

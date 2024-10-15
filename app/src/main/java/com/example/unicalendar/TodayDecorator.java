@@ -4,9 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.text.style.LineBackgroundSpan;
-
 import androidx.core.content.ContextCompat;
-
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
@@ -37,8 +35,6 @@ public class TodayDecorator implements DayViewDecorator {
             this.paint = new Paint();
             paint.setAntiAlias(true);
             paint.setColor(ContextCompat.getColor(context, R.color.todaysDate));
-//            paint.setStyle(Paint.Style.STROKE);
-//            paint.setStrokeWidth(4f);
         }
 
         @Override

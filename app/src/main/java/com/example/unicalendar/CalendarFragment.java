@@ -1,8 +1,8 @@
 package com.example.unicalendar;
+
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,17 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ArrayAdapter;
 import android.app.TimePickerDialog;
-
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import org.threeten.bp.format.DateTimeFormatter; // Correct import for ThreeTenABP
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,7 +30,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import com.google.firebase.database.ValueEventListener;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -85,7 +81,6 @@ public class CalendarFragment extends Fragment {
                 ((MainActivity) getActivity()).updateEventList(selectedDate);
             }
         });
-       // materialCalendarView.setSelectionDrawable(getResources().getDrawable(R.drawable.selection_decorator));
 
     }
 
