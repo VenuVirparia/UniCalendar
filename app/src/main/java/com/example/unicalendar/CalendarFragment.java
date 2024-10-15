@@ -2,7 +2,6 @@ package com.example.unicalendar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -10,19 +9,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.CalendarView;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ArrayAdapter;
 import android.app.TimePickerDialog;
-import java.text.SimpleDateFormat;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -32,9 +25,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import org.threeten.bp.format.DateTimeFormatter; // Correct import for ThreeTenABP
-import org.threeten.bp.LocalDate; // Ensure you're using ThreeTen's LocalDate
-import org.threeten.bp.temporal.TemporalAccessor;
-import org.w3c.dom.Text;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,9 +37,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.DayViewDecorator;
-import com.prolificinteractive.materialcalendarview.DayViewFacade;
-import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 
 public class CalendarFragment extends Fragment {
@@ -98,6 +85,8 @@ public class CalendarFragment extends Fragment {
                 ((MainActivity) getActivity()).updateEventList(selectedDate);
             }
         });
+       // materialCalendarView.setSelectionDrawable(getResources().getDrawable(R.drawable.selection_decorator));
+
     }
 
     private void openEventDialog(String date) {
@@ -293,7 +282,7 @@ public class CalendarFragment extends Fragment {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Map<String, DayEvents> eventsByDate = new HashMap<>();
+                //Map<String, DayEvents> eventsByDate = new HashMap<>();
 
                 for (DataSnapshot dateSnapshot : dataSnapshot.getChildren()) {
                     String dateKey = dateSnapshot.getKey();
@@ -306,29 +295,34 @@ public class CalendarFragment extends Fragment {
                                 int year = Integer.parseInt(dateParts[2]);
                                 CalendarDay eventDay = CalendarDay.from(year, month, day);
 
-                                DayEvents dayEvents = eventsByDate.computeIfAbsent(dateKey, k -> new DayEvents(eventDay));
-
+                                ///DayEvents dayEvents = eventsByDate.computeIfAbsent(dateKey, k -> new DayEvents(eventDay));
+                                String eventType = "Other";
                                 for (DataSnapshot eventSnapshot : dateSnapshot.getChildren()) {
                                     String club = eventSnapshot.child("club").getValue(String.class);
-                                    if (club != null) {
-                                        dayEvents.addClub(club);
+                                    if ("External Exam".equals(club) || "Internal Exam".equals(club)) {
+                                        eventType = "Exam";
+                                        break;
+                                    } else if ("Holiday".equals(club)) {
+                                        eventType = "Holiday";
+                                        break;
                                     }
                                 }
 
-
+                                calendarView.addDecorator(new EventDecorator(getContext(), eventDay, eventType));
                             } catch (NumberFormatException e) {
                                 Log.e("CalendarFragment", "Invalid date format: " + dateKey);
                             }
                         }
                     }
+                    }
                 }
 
-                // Apply decorators for each day with events
-                for (DayEvents dayEvents : eventsByDate.values()) {
-                    if (!dayEvents.getClubs().isEmpty()) {
-                        calendarView.addDecorator(new ClubEventDecorator(getContext(), dayEvents));
-                    }                }
-            }
+//                // Apply decorators for each day with events
+//                for (DayEvents dayEvents : eventsByDate.values()) {
+//                    if (!dayEvents.getClubs().isEmpty()) {
+//                        calendarView.addDecorator(new EventDecorator(getContext(), dayEvents));
+//                    }                }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

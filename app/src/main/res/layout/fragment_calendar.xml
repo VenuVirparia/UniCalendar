@@ -41,7 +41,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/roundFab"
         app:srcCompat="@drawable/ic_add_event"
-       android:backgroundTint="#C8A029"
+       android:backgroundTint="@color/backgroundcolor"
        android:visibility="gone"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

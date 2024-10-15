@@ -2,7 +2,7 @@
 <resources>
     <color name="fontcolor">#181B1B</color>
     <color name="backgroundcolor">#EBEBEA</color>
-    <color name="todaysDate">#181B1B</color>
+    <color name="todaysDate">#B184E6</color>
 
     <color name="holiday">#C65699</color>
     <color name="other">#81BB79</color>
@@ -10,6 +10,6 @@
 
     <color name="link">#2571CC</color>
     <color name="lift">#3C3C3C</color>
-    <color name="select">#7A7979</color>
+    <color name="select">#958989</color>
 
 </resources>

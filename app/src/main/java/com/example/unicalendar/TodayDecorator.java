@@ -37,15 +37,15 @@ public class TodayDecorator implements DayViewDecorator {
             this.paint = new Paint();
             paint.setAntiAlias(true);
             paint.setColor(ContextCompat.getColor(context, R.color.todaysDate));
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(4f);
+//            paint.setStyle(Paint.Style.STROKE);
+//            paint.setStrokeWidth(4f);
         }
 
         @Override
         public void drawBackground(Canvas canvas, Paint paint,
                                    int left, int right, int top, int baseline, int bottom,
                                    CharSequence text, int start, int end, int lnum) {
-            int radius = (right - left) / 2;
+            int radius = (right - left) / 3;
             int centerX = (right + left) / 2;
             int centerY = (bottom + top) / 2;
 

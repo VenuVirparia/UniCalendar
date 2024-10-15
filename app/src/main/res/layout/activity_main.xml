@@ -95,7 +95,7 @@
         android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:background="?attr/colorSurface"
+        android:background="@color/backgroundcolor"
         android:fitsSystemWindows="true">
 
         <androidx.core.widget.NestedScrollView
@@ -113,9 +113,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Profile"
-                    android:textColor="?attr/colorOnSurface"
+                    android:fontFamily="@font/aclonica"
+                    android:textColor="@color/fontcolor"
                     android:textSize="24sp"
-                    android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
 
                 <com.google.android.material.card.MaterialCardView
@@ -136,7 +136,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="User Email"
-                            android:textColor="?attr/colorOnSurface"
+                            android:fontFamily="@font/alice"
+                            android:textColor="@color/fontcolor"
                             android:textSize="18sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -146,7 +147,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Event Indicators"
-                    android:textColor="?attr/colorOnSurface"
+                    android:fontFamily="@font/alice"
+                    android:textColor="@color/fontcolor"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
@@ -159,8 +161,9 @@
                     android:layout_marginBottom="12dp">
 
                     <View
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center"
                         android:background="@drawable/circle_shape"
                         android:backgroundTint="@color/exam" />
 
@@ -168,7 +171,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Exam"
-                        android:textColor="?attr/colorOnSurface"
+                        android:fontFamily="@font/alice"
+                        android:textColor="@color/fontcolor"
                         android:textSize="16sp"
                         android:layout_marginStart="12dp" />
                 </LinearLayout>
@@ -181,8 +185,9 @@
                     android:layout_marginBottom="12dp">
 
                     <View
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center"
                         android:background="@drawable/circle_shape"
                         android:backgroundTint="@color/holiday" />
 
@@ -190,7 +195,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Holiday"
-                        android:textColor="?attr/colorOnSurface"
+                        android:fontFamily="@font/alice"
+                        android:textColor="@color/fontcolor"
                         android:textSize="16sp"
                         android:layout_marginStart="12dp" />
                 </LinearLayout>
@@ -203,8 +209,9 @@
                     android:layout_marginBottom="16dp">
 
                     <View
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center"
                         android:background="@drawable/circle_shape"
                         android:backgroundTint="@color/other" />
 
@@ -212,7 +219,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Other Events &amp; Important Dates"
-                        android:textColor="?attr/colorOnSurface"
+                        android:fontFamily="@font/alice"
+                        android:textColor="@color/fontcolor"
                         android:textSize="16sp"
                         android:layout_marginStart="12dp" />
                 </LinearLayout>
@@ -228,6 +236,7 @@
             android:layout_gravity="bottom"
             android:layout_margin="16dp"
             android:text="Logout"
+            android:fontFamily="@font/alice"
             android:backgroundTint="@color/fontcolor"
             android:textColor="@color/backgroundcolor"
             app:cornerRadius="8dp" />

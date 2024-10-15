@@ -54,6 +54,6 @@ public class splashScreen extends AppCompatActivity {
 
                 finish(); // Close the splash screen activity after redirecting
             }
-        }, 3000);
+        }, 2500);
     }
 }
