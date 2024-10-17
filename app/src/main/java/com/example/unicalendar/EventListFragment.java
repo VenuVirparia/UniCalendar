@@ -117,7 +117,7 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
                 location.setVisibility(View.GONE);
             }
 
-            if (event.getDetails() != null && !event.getDetails().isEmpty()) {
+            if (event.getDetails() != null && !event.getDetails().isEmpty() && !"-".equals(event.getDetails())) {
                 eventDetails.setText("Details: " + event.getDetails());
                 eventDetails.setVisibility(View.VISIBLE);
             } else {
@@ -259,10 +259,7 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
                 return;
             }
 
-            if (!"Holiday".equals(eventClub) && eventDetails.isEmpty()) {
-                Toast.makeText(getContext(), "Event details are required for non-holiday events", Toast.LENGTH_SHORT).show();
-                return;
-            }
+
             event.setName(eventNameEditText.getText().toString());
             event.setTime(eventTimeTextView.getText().toString());
             event.setVenue(venueSpinner.getText().toString());

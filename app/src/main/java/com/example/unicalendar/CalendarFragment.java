@@ -177,7 +177,7 @@ public class CalendarFragment extends Fragment {
         if (validateInputs(eventName, eventVenue, classroomNumber, eventClub, eventDetails)) {
             saveEventToFirebase(eventName, eventTime.isEmpty() ? "-" : eventTime,
                     eventVenue.isEmpty() ? "-" : eventVenue,
-                    eventClub, eventDetails,
+                    eventClub, eventDetails.isEmpty()?"-": eventDetails,
                     classroomNumber.isEmpty() ? "-" : classroomNumber,
                     dialog);
         }
