@@ -189,10 +189,7 @@ public class CalendarFragment extends Fragment {
             return false;
         }
 
-        if (!"Holiday".equals(eventClub) && eventDetails.isEmpty()) {
-            Toast.makeText(getContext(), "Event details are required for non-holiday events", Toast.LENGTH_SHORT).show();
-            return false;
-        }
+
 
         if (eventVenue.equals("ClassRoom") && !classroomNumber.isEmpty()) {
             try {
