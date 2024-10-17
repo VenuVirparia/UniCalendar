@@ -99,7 +99,14 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
 
 
             eventName.setText(event.getName());
-            eventClub.setText("" + event.getClub());
+            if (event.getClub() != null && !event.getClub().isEmpty() && !"-".equals(event.getClub())) {
+                eventClub.setVisibility(View.VISIBLE);
+                eventClub.setText("" + event.getClub());
+
+            } else {
+                eventClub.setVisibility(View.GONE);
+            }
+
 
             if (event.getTime() != null && !event.getTime().isEmpty() && !"-".equals(event.getTime())) {
                 eventTime.setText(": " + event.getTime());
